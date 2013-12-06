@@ -33,7 +33,7 @@ boolean cellHasTerrainFlag(short x, short y, unsigned long flagMask) {
 }
 #endif
 
-boolean checkLoopiness(short x, short y) {
+static boolean checkLoopiness(const short x, const short y) {
   boolean inString;
   short newX, newY, dir, sdir;
   short numStrings, maxStringLength, currentStringLength;
@@ -101,7 +101,7 @@ boolean checkLoopiness(short x, short y) {
 /*
  * TODO: Find out what this does.
  */
-static void auditLoop(short x, short y, char grid[DCOLS][DROWS]) {
+static void auditLoop(const short x, const short y, char grid[DCOLS][DROWS]) {
   if (coordinatesAreInMap(x, y)
       && !grid[x][y]
       && !(pmap[x][y].flags & IN_LOOP)) {
@@ -323,10 +323,10 @@ void analyzeMap(boolean calculateChokeMap) {
 }
 
 // Add some loops to the otherwise simply connected network of rooms.
-void addLoops(short **grid, short minimumPathingDistance) {
+static void addLoops(short **grid, short minimumPathingDistance) {
   short newX, newY, oppX, oppY;
   short **pathMap, **costMap;
-  short i, d, x, y, sCoord[DCOLS*DROWS];
+  short d, sCoord[DCOLS*DROWS];
   const short dirCoords[2][2] = {{1, 0}, {0, 1}};
 
   fillSequentialList(sCoord, DCOLS*DROWS);
@@ -343,9 +343,9 @@ void addLoops(short **grid, short minimumPathingDistance) {
   findReplaceGrid(costMap, 0, 0, PDS_OBSTRUCTION);
   findReplaceGrid(costMap, 1, 30000, 1);
 
-  for (i = 0; i < DCOLS*DROWS; i++) {
-    x = sCoord[i]/DROWS;
-    y = sCoord[i] % DROWS;
+  for (short i = 0; i < DCOLS*DROWS; i++) {
+    short x = sCoord[i]/DROWS;
+    short y = sCoord[i] % DROWS;
     if (!grid[x][y]) {
       for (d=0; d <= 1; d++) { // Try a horizontal door, and then a vertical door.
         newX = x + dirCoords[d][0];
