@@ -1,23 +1,34 @@
-
+PROG := bin/brogue
+# Need SDL flags for compiling.
 SDL_FLAGS = `sdl-config --cflags` `sdl-config --libs`
 LIBTCODDIR=src/libtcod-1.5.2
-CFLAGS=-Isrc/brogue -Isrc/platform -Wall -Wno-parentheses ${DEFINES}
-RELEASENAME=brogue-1.7.2
+LIBS = $(shell pkg-config --libs ncurses) -lm
+CURSES_CFLAGS = $(shell pkg-config --cflags ncurses)
+
+COMMON_CFLAGS = -MMD -Wall -Wno-parentheses -Isrc/brogue -Isrc/platform ${DEFINES}
+CFLAGS = $(COMMON_CFLAGS) $(CURSES_CFLAGS)
+# CFLAGS=-Isrc/brogue -Isrc/platform -Wall -Wno-parentheses ${DEFINES}
+RELEASENAME=brogue-1.7.3
 LASTTARGET := $(shell ./brogue --target)
 CC ?= gcc
+OUTDIRS := obj/brogue obj/platform
+
+SRCFILES := $(wildcard src/brogue/*.c) $(wildcard src/platform/*.c)
+OBJFILES := $(patsubst src/%.c,obj/%.o,$(SRCFILES))
+DEPFILES := $(patsubst src/%.c,obj/%.d,$(SRCFILES))
 
 ifeq (${LASTTARGET},both)
-all : both
+all : dirs both
 else ifeq (${LASTTARGET},curses)
-all : curses
+all : dirs curses
 else ifeq (${LASTTARGET},tcod)
-all : tcod
+all : dirs tcod
 else
-all : both
+all : dirs both
 endif
 
-%.o : %.c Makefile src/brogue/Rogue.h src/brogue/IncludeGlobals.h
-	$(CC) $(CFLAGS) -g -o $@ -c $< 
+#%.o : %.c Makefile src/brogue/Rogue.h src/brogue/IncludeGlobals.h
+#	$(CC) $(CFLAGS) -g -o $@ -c $< 
 
 BROGUEFILES=src/brogue/Architect.o \
 	src/brogue/Combat.o \
@@ -48,6 +59,12 @@ TCOD_LIB = -L. -L${LIBTCODDIR} ${SDL_FLAGS} -ltcod -Wl,-rpath,.
 CURSES_DEF = -DBROGUE_CURSES
 CURSES_LIB = -lncurses -lm
 
+.PHONY : clean dirs both curses tcod tar
+
+all : dirs $(PROG)
+
+dirs:
+	@mkdir -p $(OUTDIRS)
 
 tcod : DEPENDENCIES += ${TCOD_DEP}
 tcod : DEFINES += ${TCOD_DEF}
@@ -78,13 +95,19 @@ curses : bin/brogue
 tcod : bin/brogue
 endif
 
-.PHONY : clean both curses tcod tar
+$(PROG): $(OBJFILES)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
-bin/brogue : ${DEPENDENCIES} ${BROGUEFILES}
-	$(CC) -O2 -march=i586 -o bin/brogue ${BROGUEFILES} ${LIBRARIES} -Wl,-rpath,.
+#bin/brogue : ${DEPENDENCIES} ${BROGUEFILES}
+#	$(CC) -O2 -march=i586 -o bin/brogue ${BROGUEFILES} ${LIBRARIES} -Wl,-rpath,.
+
+# Rule for making all *.c files in src to *.o files
+obj/%.o: src/%.c
+	$(CC) $(CFLAGS) -MF $(patsubst obj/%.o, obj/%.d,$@) -c $< -o $@
 
 clean : 
 	rm -f src/brogue/*.o src/platform/*.o bin/brogue
+	rm -fr obj
 
 ${LIBTCODDIR} :
 	src/get-libtcod.sh
