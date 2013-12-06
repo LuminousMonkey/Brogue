@@ -119,8 +119,10 @@ static void auditLoop(short x, short y, char grid[DCOLS][DROWS]) {
 
 // Assumes it is called with respect to a passable (startX, startY), and that the same is not already included in results.
 // Returns 10000 if the area included an area machine.
-short floodFillCount(char results[DCOLS][DROWS], char passMap[DCOLS][DROWS], short startX, short startY) {
-  short dir, newX, newY, count;
+static short floodFillCount(char results[DCOLS][DROWS],
+                            char passMap[DCOLS][DROWS],
+                            short startX, short startY) {
+  short count;
 
   count = (passMap[startX][startY] == 2 ? 5000 : 1);
 
@@ -130,9 +132,9 @@ short floodFillCount(char results[DCOLS][DROWS], char passMap[DCOLS][DROWS], sho
 
   results[startX][startY] = true;
 
-  for(dir=0; dir<4; dir++) {
-    newX = startX + nbDirs[dir][0];
-    newY = startY + nbDirs[dir][1];
+  for(short dir = 0; dir < 4; dir++) {
+    short newX = startX + nbDirs[dir][0];
+    short newY = startY + nbDirs[dir][1];
     if (coordinatesAreInMap(newX, newY)
         && passMap[newX][newY]
         && !results[newX][newY]) {
@@ -151,18 +153,18 @@ short floodFillCount(char results[DCOLS][DROWS], char passMap[DCOLS][DROWS], sho
 //      Four means it is in the intersection of two hallways.
 //      Five or more means there is a bug.
 short passableArcCount(short x, short y) {
-  short arcCount, dir, oldX, oldY, newX, newY;
+  short arcCount;
 
 #ifdef BROGUE_ASSERTS
   assert(coordinatesAreInMap(x, y));
 #endif
 
   arcCount = 0;
-  for (dir = 0; dir < 8; dir++) {
-    oldX = x + cDirs[(dir + 7) % 8][0];
-    oldY = y + cDirs[(dir + 7) % 8][1];
-    newX = x + cDirs[dir][0];
-    newY = y + cDirs[dir][1];
+  for (short dir = 0; dir < 8; dir++) {
+    short oldX = x + cDirs[(dir + 7) % 8][0];
+    short oldY = y + cDirs[(dir + 7) % 8][1];
+    short newX = x + cDirs[dir][0];
+    short newY = y + cDirs[dir][1];
     // Counts every transition from passable to impassable or vice-versa on the way around the cell:
     if ((coordinatesAreInMap(newX, newY) && cellIsPassableOrDoor(newX, newY))
         != (coordinatesAreInMap(oldX, oldY) && cellIsPassableOrDoor(oldX, oldY))) {
@@ -174,15 +176,15 @@ short passableArcCount(short x, short y) {
 
 // locates all loops and chokepoints
 void analyzeMap(boolean calculateChokeMap) {
-  short i, j, i2, j2, dir, newX, newY, oldX, oldY, passableArcCount, cellCount;
+  short newX, newY, oldX, oldY, passableArcCount;
   char grid[DCOLS][DROWS], passMap[DCOLS][DROWS];
   boolean designationSurvives;
 
   // first find all of the loops
   rogue.staleLoopMap = false;
 
-  for(i=0; i<DCOLS; i++) {
-    for(j=0; j<DROWS; j++) {
+  for(short i = 0; i < DCOLS; i++) {
+    for(short j = 0; j < DROWS; j++) {
       if (cellHasTerrainFlag(i, j, T_PATHING_BLOCKER)
           && !cellHasTMFlag(i, j, TM_IS_SECRET)) {
 
@@ -195,8 +197,8 @@ void analyzeMap(boolean calculateChokeMap) {
     }
   }
 
-  for(i=0; i<DCOLS; i++) {
-    for(j=0; j<DROWS; j++) {
+  for(short i = 0; i < DCOLS; i++) {
+    for(short j = 0; j < DROWS; j++) {
       checkLoopiness(i, j);
     }
   }
@@ -205,11 +207,11 @@ void analyzeMap(boolean calculateChokeMap) {
   zeroOutGrid(grid);
   auditLoop(0, 0, grid);
 
-  for(i=0; i<DCOLS; i++) {
-    for(j=0; j<DROWS; j++) {
+  for(short i = 0; i < DCOLS; i++) {
+    for(short j = 0; j < DROWS; j++) {
       if (pmap[i][j].flags & IN_LOOP) {
         designationSurvives = false;
-        for (dir = 0; dir < 8; dir++) {
+        for (short dir = 0; dir < 8; dir++) {
           newX = i + nbDirs[dir][0];
           newY = j + nbDirs[dir][1];
           if (coordinatesAreInMap(newX, newY)
@@ -228,12 +230,12 @@ void analyzeMap(boolean calculateChokeMap) {
   }
 
   // done finding loops; now flag chokepoints
-  for(i=1; i<DCOLS-1; i++) {
-    for(j=1; j<DROWS-1; j++) {
+  for(short i = 1; i < DCOLS - 1; i++) {
+    for(short j = 1; j < DROWS - 1; j++) {
       pmap[i][j].flags &= ~IS_CHOKEPOINT;
       if (passMap[i][j] && !(pmap[i][j].flags & IN_LOOP)) {
         passableArcCount = 0;
-        for (dir = 0; dir < 8; dir++) {
+        for (short dir = 0; dir < 8; dir++) {
           oldX = i + cDirs[(dir + 7) % 8][0];
           oldY = j + cDirs[(dir + 7) % 8][1];
           newX = i + cDirs[dir][0];
@@ -264,8 +266,8 @@ void analyzeMap(boolean calculateChokeMap) {
     // The cost of all of this is one depth-first flood-fill per open point that is adjacent to a chokepoint.
 
     // Start by setting the chokepoint values really high, and roping off room machines.
-    for(i=0; i<DCOLS; i++) {
-      for(j=0; j<DROWS; j++) {
+    for(short i = 0; i < DCOLS; i++) {
+      for(short j = 0; j < DROWS; j++) {
         chokeMap[i][j] = 30000;
         if (pmap[i][j].flags & IS_IN_ROOM_MACHINE) {
           passMap[i][j] = false;
@@ -275,10 +277,10 @@ void analyzeMap(boolean calculateChokeMap) {
 
     // Scan through and find a chokepoint next to an open point.
 
-    for(i=0; i<DCOLS; i++) {
-      for(j=0; j<DROWS; j++) {
+    for(short i = 0; i < DCOLS; i++) {
+      for(short j = 0; j < DROWS; j++) {
         if (passMap[i][j] && (pmap[i][j].flags & IS_CHOKEPOINT)) {
-          for (dir=0; dir<4; dir++) {
+          for (short dir = 0; dir < 4; dir++) {
             newX = i + nbDirs[dir][0];
             newY = j + nbDirs[dir][1];
             if (coordinatesAreInMap(newX, newY)
@@ -289,7 +291,7 @@ void analyzeMap(boolean calculateChokeMap) {
               // Keep track of the flooded region in grid[][].
               zeroOutGrid(grid);
               passMap[i][j] = false;
-              cellCount = floodFillCount(grid, passMap, newX, newY);
+              short cellCount = floodFillCount(grid, passMap, newX, newY);
               passMap[i][j] = true;
 
               // CellCount is the size of the region that would be obstructed if the chokepoint were blocked.
@@ -297,8 +299,8 @@ void analyzeMap(boolean calculateChokeMap) {
 
               if (cellCount >= 4) {
                 // Now, on the chokemap, all of those flooded cells should take the lesser of their current value or this resultant number.
-                for(i2=0; i2<DCOLS; i2++) {
-                  for(j2=0; j2<DROWS; j2++) {
+                for(short i2 = 0; i2<DCOLS; i2++) {
+                  for(short j2 = 0; j2<DROWS; j2++) {
                     if (grid[i2][j2] && cellCount < chokeMap[i2][j2]) {
                       chokeMap[i2][j2] = cellCount;
                       pmap[i2][j2].flags &= ~IS_GATE_SITE;
@@ -546,7 +548,7 @@ boolean cellIsFeatureCandidate(short x, short y,
   } else if (featureFlags & MF_BUILD_ANYWHERE_ON_LEVEL) {
     if ((featureFlags & MF_GENERATE_ITEM)
         && (cellHasTerrainFlag(x, y, T_OBSTRUCTS_ITEMS | T_PATHING_BLOCKER) || (pmap[x][y].flags & (IS_CHOKEPOINT | IN_LOOP | IS_IN_MACHINE)))) {
-      return false;0
+      return false;
     } else {
       return true;
     }
