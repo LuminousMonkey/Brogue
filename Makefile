@@ -1,11 +1,12 @@
 PROG := bin/brogue
 # Need SDL flags for compiling.
-SDL_FLAGS = `sdl-config --cflags` `sdl-config --libs`
-LIBTCODDIR=src/libtcod-1.5.2
-LIBS = $(shell pkg-config --libs ncurses) -lm
-CURSES_CFLAGS = $(shell pkg-config --cflags ncurses)
+SDL_FLAGS := $(shell pkg-config --cflags sdl)
+SDL_LIBS := $(shell pkg-config --libs)
 
-COMMON_CFLAGS = -MMD -Wall -Wno-parentheses -Isrc/brogue -Isrc/platform ${DEFINES}
+CURSES_LIBS := $(shell pkg-config --libs ncurses) -lm
+CURSES_CFLAGS := $(shell pkg-config --cflags ncurses)
+
+COMMON_CFLAGS = -MMD -Wall -pedantic -Weverything -std=c99 -Isrc/brogue -Isrc/platform ${DEFINES}
 CFLAGS = $(COMMON_CFLAGS) $(CURSES_CFLAGS)
 RELEASENAME=brogue-1.7.3
 LASTTARGET := $(shell ./brogue --target)
@@ -26,10 +27,12 @@ else
 all : dirs both
 endif
 
-
 TCOD_DEF = -DBROGUE_TCOD -I$(LIBTCODDIR)/include
 TCOD_DEP = ${LIBTCODDIR}
 TCOD_LIB = -L. -L${LIBTCODDIR} ${SDL_FLAGS} -ltcod -Wl,-rpath,.
+
+TCOD_LIBS = $(shell pkg-config --libs sdl) -ltcod
+TCOD_CFLAGS = $(shell pkg-config --cflags sdl)
 
 CURSES_DEF = -DBROGUE_CURSES
 CURSES_LIB = -lncurses -lm
@@ -43,14 +46,15 @@ dirs:
 
 tcod : DEPENDENCIES += ${TCOD_DEP}
 tcod : DEFINES += ${TCOD_DEF}
-tcod : LIBRARIES += ${TCOD_LIB}
+tcod : LIBS += ${TCOD_LIBS}
+tcod : CFLAGS += ${TCOD_CFLAGS}
 
 curses : DEFINES = ${CURSES_DEF}
-curses : LIBRARIES = ${CURSES_LIB}
+curses : LIBS = ${CURSES_LIBS}
 
 both : DEPENDENCIES += ${TCOD_DEP}
 both : DEFINES += ${TCOD_DEF} ${CURSES_DEF}
-both : LIBRARIES += ${TCOD_LIB} ${CURSES_LIB}
+both : LIBRARIES += ${TCOD_LIBS} ${CURSES_LIBS}
 
 ifeq (${LASTTARGET},both)
 both : bin/brogue
