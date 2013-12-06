@@ -7,7 +7,6 @@ CURSES_CFLAGS = $(shell pkg-config --cflags ncurses)
 
 COMMON_CFLAGS = -MMD -Wall -Wno-parentheses -Isrc/brogue -Isrc/platform ${DEFINES}
 CFLAGS = $(COMMON_CFLAGS) $(CURSES_CFLAGS)
-# CFLAGS=-Isrc/brogue -Isrc/platform -Wall -Wno-parentheses ${DEFINES}
 RELEASENAME=brogue-1.7.3
 LASTTARGET := $(shell ./brogue --target)
 CC ?= gcc
@@ -27,30 +26,6 @@ else
 all : dirs both
 endif
 
-#%.o : %.c Makefile src/brogue/Rogue.h src/brogue/IncludeGlobals.h
-#	$(CC) $(CFLAGS) -g -o $@ -c $< 
-
-BROGUEFILES=src/brogue/Architect.o \
-	src/brogue/Combat.o \
-	src/brogue/Dijkstra.o \
-	src/brogue/Globals.o \
-	src/brogue/IO.o \
-	src/brogue/Items.o \
-	src/brogue/Light.o \
-	src/brogue/Monsters.o \
-	src/brogue/Buttons.o \
-	src/brogue/Movement.o \
-	src/brogue/Recordings.o \
-	src/brogue/RogueMain.o \
-	src/brogue/Random.o \
-	src/brogue/MainMenu.o \
-	src/brogue/Grid.o \
-	src/brogue/Time.o \
-	src/platform/main.o \
-	src/platform/platformdependent.o \
-	src/platform/curses-platform.o \
-	src/platform/tcod-platform.o \
-	src/platform/term.o
 
 TCOD_DEF = -DBROGUE_TCOD -I$(LIBTCODDIR)/include
 TCOD_DEP = ${LIBTCODDIR}
