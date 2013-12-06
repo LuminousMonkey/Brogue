@@ -98,16 +98,18 @@ boolean checkLoopiness(short x, short y) {
   }
 }
 
-void auditLoop(short x, short y, char grid[DCOLS][DROWS]) {
-  short dir, newX, newY;
+/*
+ * TODO: Find out what this does.
+ */
+static void auditLoop(short x, short y, char grid[DCOLS][DROWS]) {
   if (coordinatesAreInMap(x, y)
       && !grid[x][y]
       && !(pmap[x][y].flags & IN_LOOP)) {
 
     grid[x][y] = true;
-    for (dir = 0; dir < 8; dir++) {
-      newX = x + nbDirs[dir][0];
-      newY = y + nbDirs[dir][1];
+    for (short dir = 0; dir < 8; dir++) {
+      short newX = x + nbDirs[dir][0];
+      short newY = y + nbDirs[dir][1];
       if (coordinatesAreInMap(newX, newY)) {
         auditLoop(newX, newY, grid);
       }
@@ -544,7 +546,7 @@ boolean cellIsFeatureCandidate(short x, short y,
   } else if (featureFlags & MF_BUILD_ANYWHERE_ON_LEVEL) {
     if ((featureFlags & MF_GENERATE_ITEM)
         && (cellHasTerrainFlag(x, y, T_OBSTRUCTS_ITEMS | T_PATHING_BLOCKER) || (pmap[x][y].flags & (IS_CHOKEPOINT | IN_LOOP | IS_IN_MACHINE)))) {
-      return false;
+      return false;0
     } else {
       return true;
     }
