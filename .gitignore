@@ -1,3 +1,6 @@
 *.d
 obj
 bin/brogue
+.#*
+*.broguesave
+BrogueHighScores*
