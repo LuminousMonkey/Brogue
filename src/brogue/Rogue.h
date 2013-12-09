@@ -25,6 +25,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "PlatformDefines.h"
+#include "tiles.h"
+#include "map.h"
+#include "defines.h"
+#include "types.h"
 
 // unicode: comment this line to revert to ASCII
 
@@ -64,13 +68,6 @@
 #include <assert.h>
 #endif
 
-#define boolean                 char
-
-#define false                   0
-#define true                    1
-
-#define Fl(N)                   (1 << (N))
-
 #define PI 3.14159265
 #define FLOAT_FUDGE 0.00001
 
@@ -83,24 +80,6 @@
 #define RNG_LOG                 "RNGLog.txt"
 
 #define BROGUE_FILENAME_MAX     (min(1024*4, FILENAME_MAX))
-
-// Allows unicode characters:
-#define uchar                   unsigned short
-
-#define MESSAGE_LINES           3
-#define MESSAGE_ARCHIVE_LINES   ROWS
-
-// Size of the entire terminal window. These need to be hard-coded here and in Viewport.h
-#define COLS                    100
-#define ROWS                    (31 + MESSAGE_LINES)
-
-// Size of the portion of the terminal window devoted to displaying the dungeon:
-#define DCOLS                   (COLS - STAT_BAR_WIDTH - 1)
-#define DROWS                   (ROWS - MESSAGE_LINES - 2)  // n lines at the top for messages;
-                                                            // one line at the bottom for flavor text;
-                                                            // another line at the bottom for the menu bar.
-
-#define STAT_BAR_WIDTH          20          // number of characters in the stats bar to the left of the map
 
 #define LOS_SLOPE_GRANULARITY   32768       // how finely we divide up the squares when calculating slope;
                                             // higher numbers mean fewer artifacts but more memory and processing
@@ -358,204 +337,6 @@ enum textEntryTypes {
 
 #define NUMBER_DYNAMIC_COLORS   6
 
-enum tileType {
-    NOTHING = 0,
-    GRANITE,
-    FLOOR,
-    FLOOR_FLOODABLE,
-    CARPET,
-    WALL,
-    DOOR,
-    OPEN_DOOR,
-    SECRET_DOOR,
-    LOCKED_DOOR,
-    OPEN_IRON_DOOR_INERT,
-    DOWN_STAIRS,
-    UP_STAIRS,
-    DUNGEON_EXIT,
-    DUNGEON_PORTAL,
-    TORCH_WALL, // wall lit with a torch
-    CRYSTAL_WALL,
-    PORTCULLIS_CLOSED,
-    PORTCULLIS_DORMANT,
-    WOODEN_BARRICADE,
-    PILOT_LIGHT_DORMANT,
-    PILOT_LIGHT,
-    HAUNTED_TORCH_DORMANT,
-    HAUNTED_TORCH_TRANSITIONING,
-    HAUNTED_TORCH,
-    WALL_LEVER_HIDDEN,
-    WALL_LEVER,
-    WALL_LEVER_PULLED,
-    WALL_LEVER_HIDDEN_DORMANT,
-    STATUE_INERT,
-    STATUE_DORMANT,
-    STATUE_CRACKING,
-    PORTAL,
-    TURRET_DORMANT,
-    WALL_MONSTER_DORMANT,
-    DARK_FLOOR_DORMANT,
-    DARK_FLOOR_DARKENING,
-    DARK_FLOOR,
-    MACHINE_TRIGGER_FLOOR,
-    ALTAR_INERT,
-    ALTAR_KEYHOLE,
-    ALTAR_CAGE_OPEN,
-    ALTAR_CAGE_CLOSED,
-    ALTAR_SWITCH,
-    ALTAR_SWITCH_RETRACTING,
-    ALTAR_CAGE_RETRACTABLE,
-    PEDESTAL,
-    MONSTER_CAGE_OPEN,
-    MONSTER_CAGE_CLOSED,
-    COFFIN_CLOSED,
-    COFFIN_OPEN,
-
-    GAS_TRAP_POISON_HIDDEN,
-    GAS_TRAP_POISON,
-    TRAP_DOOR_HIDDEN,
-    TRAP_DOOR,
-    GAS_TRAP_PARALYSIS_HIDDEN,
-    GAS_TRAP_PARALYSIS,
-    MACHINE_PARALYSIS_VENT_HIDDEN,
-    MACHINE_PARALYSIS_VENT,
-    GAS_TRAP_CONFUSION_HIDDEN,
-    GAS_TRAP_CONFUSION,
-    FLAMETHROWER_HIDDEN,
-    FLAMETHROWER,
-    FLOOD_TRAP_HIDDEN,
-    FLOOD_TRAP,
-    NET_TRAP_HIDDEN,
-    NET_TRAP,
-    MACHINE_POISON_GAS_VENT_HIDDEN,
-    MACHINE_POISON_GAS_VENT_DORMANT,
-    MACHINE_POISON_GAS_VENT,
-    MACHINE_METHANE_VENT_HIDDEN,
-    MACHINE_METHANE_VENT_DORMANT,
-    MACHINE_METHANE_VENT,
-    STEAM_VENT,
-    MACHINE_PRESSURE_PLATE,
-    MACHINE_PRESSURE_PLATE_USED,
-    MACHINE_GLYPH,
-    MACHINE_GLYPH_INACTIVE,
-
-    DEEP_WATER,
-    SHALLOW_WATER,
-    MUD,
-    CHASM,
-    CHASM_EDGE,
-    MACHINE_COLLAPSE_EDGE_DORMANT,
-    MACHINE_COLLAPSE_EDGE_SPREADING,
-    LAVA,
-    LAVA_RETRACTABLE,
-    LAVA_RETRACTING,
-    SUNLIGHT_POOL,
-    DARKNESS_PATCH,
-    ACTIVE_BRIMSTONE,
-    INERT_BRIMSTONE,
-    OBSIDIAN,
-    BRIDGE,
-    BRIDGE_EDGE,
-    STONE_BRIDGE,
-    MACHINE_FLOOD_WATER_DORMANT,
-    MACHINE_FLOOD_WATER_SPREADING,
-    MACHINE_MUD_DORMANT,
-
-    HOLE,
-    HOLE_GLOW,
-    HOLE_EDGE,
-    FLOOD_WATER_DEEP,
-    FLOOD_WATER_SHALLOW,
-    GRASS,
-    DEAD_GRASS,
-    GRAY_FUNGUS,
-    LUMINESCENT_FUNGUS,
-    LICHEN,
-    HAY,
-    RED_BLOOD,
-    GREEN_BLOOD,
-    PURPLE_BLOOD,
-    ACID_SPLATTER,
-    VOMIT,
-    URINE,
-    UNICORN_POOP,
-    WORM_BLOOD,
-    ASH,
-    BURNED_CARPET,
-    PUDDLE,
-    BONES,
-    RUBBLE,
-    JUNK,
-    ECTOPLASM,
-    EMBERS,
-    SPIDERWEB,
-    NETTING,
-    FOLIAGE,
-    DEAD_FOLIAGE,
-    TRAMPLED_FOLIAGE,
-    FUNGUS_FOREST,
-    TRAMPLED_FUNGUS_FOREST,
-    FORCEFIELD,
-    MANACLE_TL,
-    MANACLE_BR,
-    MANACLE_TR,
-    MANACLE_BL,
-    MANACLE_T,
-    MANACLE_B,
-    MANACLE_L,
-    MANACLE_R,
-    PORTAL_LIGHT,
-    GUARDIAN_GLOW,
-
-    PLAIN_FIRE,
-    BRIMSTONE_FIRE,
-    FLAMEDANCER_FIRE,
-    GAS_FIRE,
-    GAS_EXPLOSION,
-    DART_EXPLOSION,
-    ITEM_FIRE,
-    CREATURE_FIRE,
-
-    POISON_GAS,
-    CONFUSION_GAS,
-    ROT_GAS,
-    STENCH_SMOKE_GAS,
-    PARALYSIS_GAS,
-    METHANE_GAS,
-    STEAM,
-    DARKNESS_CLOUD,
-    HEALING_CLOUD,
-
-    BLOODFLOWER_STALK,
-    BLOODFLOWER_POD,
-
-    DEEP_WATER_ALGAE_WELL,
-    DEEP_WATER_ALGAE_1,
-    DEEP_WATER_ALGAE_2,
-
-    STATUE_INERT_DOORWAY,
-    STATUE_DORMANT_DOORWAY,
-
-    CHASM_WITH_HIDDEN_BRIDGE,
-    CHASM_WITH_HIDDEN_BRIDGE_ACTIVE,
-    MACHINE_CHASM_EDGE,
-
-    RAT_TRAP_WALL_DORMANT,
-    RAT_TRAP_WALL_CRACKING,
-
-    WORM_TUNNEL_MARKER_DORMANT,
-    WORM_TUNNEL_MARKER_ACTIVE,
-    WORM_TUNNEL_OUTER_WALL,
-
-    BRAZIER,
-
-    MUD_FLOOR,
-    MUD_WALL,
-    MUD_DOORWAY,
-
-    NUMBER_TILETYPES,
-};
-
 enum lightType {
     NO_LIGHT,
     MINERS_LIGHT,
@@ -612,29 +393,6 @@ enum lightType {
     GLYPH_LIGHT_BRIGHT,
     DESCENT_LIGHT,
     NUMBER_LIGHT_KINDS
-};
-
-// Item categories
-enum itemCategory {
-    FOOD                = Fl(0),
-    WEAPON              = Fl(1),
-    ARMOR               = Fl(2),
-    POTION              = Fl(3),
-    SCROLL              = Fl(4),
-    STAFF               = Fl(5),
-    WAND                = Fl(6),
-    RING                = Fl(7),
-    CHARM               = Fl(8),
-    GOLD                = Fl(9),
-    AMULET              = Fl(10),
-    GEM                 = Fl(11),
-    KEY                 = Fl(12),
-
-    CAN_BE_DETECTED     = (WEAPON | ARMOR | POTION | SCROLL | RING | CHARM | WAND | STAFF | AMULET),
-    PRENAMED_CATEGORY   = (FOOD | GOLD | AMULET | GEM | KEY),
-    NEVER_IDENTIFIABLE  = (FOOD | CHARM | GOLD | AMULET | GEM | KEY),
-    COUNTS_TOWARD_SCORE = (GOLD | AMULET | GEM),
-    ALL_ITEMS           = (FOOD|POTION|WEAPON|ARMOR|STAFF|WAND|SCROLL|RING|CHARM|GOLD|AMULET|GEM|KEY),
 };
 
 enum keyKind {
@@ -921,51 +679,6 @@ enum monsterTypes {
 #define NUMBER_ITEM_METALS          12
 #define NUMBER_ITEM_GEMS            18
 
-// Dungeon flags
-enum tileFlags {
-    DISCOVERED                  = Fl(0),
-    VISIBLE                     = Fl(1),    // cell has sufficient light and is in field of view, ready to draw.
-    HAS_PLAYER                  = Fl(2),
-    HAS_MONSTER                 = Fl(3),
-    HAS_DORMANT_MONSTER         = Fl(4),    // hidden monster on the square
-    HAS_ITEM                    = Fl(5),
-    IN_FIELD_OF_VIEW            = Fl(6),    // player has unobstructed line of sight whether or not there is enough light
-    WAS_VISIBLE                 = Fl(7),
-    HAS_DOWN_STAIRS             = Fl(8),
-    HAS_UP_STAIRS               = Fl(9),
-    IS_IN_SHADOW                = Fl(10),   // so that a player gains an automatic stealth bonus
-    MAGIC_MAPPED                = Fl(11),
-    ITEM_DETECTED               = Fl(12),
-    CLAIRVOYANT_VISIBLE         = Fl(13),
-    WAS_CLAIRVOYANT_VISIBLE     = Fl(14),
-    CLAIRVOYANT_DARKENED        = Fl(15),   // magical blindness from a cursed ring of clairvoyance
-    CAUGHT_FIRE_THIS_TURN       = Fl(16),   // so that fire does not spread asymmetrically
-    PRESSURE_PLATE_DEPRESSED    = Fl(17),   // so that traps do not trigger repeatedly while you stand on them
-    STABLE_MEMORY               = Fl(18),   // redraws will simply be pulled from the memory array, not recalculated
-    KNOWN_TO_BE_TRAP_FREE       = Fl(19),   // keep track of where the player has stepped as he knows no traps are there
-    IS_IN_PATH                  = Fl(20),   // the yellow trail leading to the cursor
-    IN_LOOP                     = Fl(21),   // this cell is part of a terrain loop
-    IS_CHOKEPOINT               = Fl(22),   // if this cell is blocked, part of the map will be rendered inaccessible
-    IS_GATE_SITE                = Fl(23),   // consider placing a locked door here
-    IS_IN_ROOM_MACHINE          = Fl(24),
-    IS_IN_AREA_MACHINE          = Fl(25),
-    IS_POWERED                  = Fl(26),   // has been activated by machine power this turn (can probably be eliminate if needed)
-    IMPREGNABLE                 = Fl(27),   // no tunneling allowed!
-    TERRAIN_COLORS_DANCING      = Fl(28),   // colors here will sparkle when the game is idle
-    TELEPATHIC_VISIBLE          = Fl(29),   // potions of telepathy let you see through other creatures' eyes
-    WAS_TELEPATHIC_VISIBLE      = Fl(30),   // potions of telepathy let you see through other creatures' eyes
-
-    HAS_STAIRS                  = (HAS_UP_STAIRS | HAS_DOWN_STAIRS),
-    IS_IN_MACHINE               = (IS_IN_ROOM_MACHINE | IS_IN_AREA_MACHINE),    // sacred ground; don't generate items here, or teleport randomly to it
-
-    PERMANENT_TILE_FLAGS = (DISCOVERED | MAGIC_MAPPED | ITEM_DETECTED | HAS_ITEM | HAS_DORMANT_MONSTER
-                            | HAS_UP_STAIRS | HAS_DOWN_STAIRS | PRESSURE_PLATE_DEPRESSED
-                            | STABLE_MEMORY | KNOWN_TO_BE_TRAP_FREE | IN_LOOP
-                            | IS_CHOKEPOINT | IS_GATE_SITE | IS_IN_MACHINE | IMPREGNABLE),
-
-    ANY_KIND_OF_VISIBLE         = (VISIBLE | CLAIRVOYANT_VISIBLE | TELEPATHIC_VISIBLE),
-};
-
 #define TURNS_FOR_FULL_REGEN                300
 #define STOMACH_SIZE                        2150
 #define HUNGER_THRESHOLD                    (STOMACH_SIZE - 1800)
@@ -1156,35 +869,6 @@ boolean cellHasTerrainFlag(short x, short y, unsigned long flagMask);
                                             // This is the Syd nerf, after Syd broke the game over his knee with a +18 ring of regeneration.
 
 // structs
-
-enum dungeonLayers {
-    NO_LAYER = -1,
-    DUNGEON = 0,        // dungeon-level tile   (e.g. walls)
-    LIQUID,             // liquid-level tile    (e.g. lava)
-    GAS,                // gas-level tile       (e.g. fire, smoke, swamp gas)
-    SURFACE,            // surface-level tile   (e.g. grass)
-    NUMBER_TERRAIN_LAYERS
-};
-
-// keeps track of graphics so we only redraw if the cell has changed:
-typedef struct cellDisplayBuffer {
-    uchar character;
-    char foreColorComponents[3];
-    char backColorComponents[3];
-    char opacity;
-    boolean needsUpdate;
-} cellDisplayBuffer;
-
-typedef struct pcell {                              // permanent cell; have to remember this stuff to save levels
-    enum tileType layers[NUMBER_TERRAIN_LAYERS];    // terrain
-    unsigned long flags;                            // non-terrain cell flags
-    unsigned short volume;                          // quantity of gas in cell
-    unsigned char machineNumber;
-    cellDisplayBuffer rememberedAppearance;         // how the player remembers the cell to look
-    enum itemCategory rememberedItemCategory;       // what category of item the player remembers lying there
-    enum tileType rememberedTerrain;                // what the player remembers as the terrain (i.e. highest priority terrain upon last seeing)
-} pcell;
-
 typedef struct tcell {          // transient cell; stuff we don't need to remember between levels
     short light[3];             // RGB components of lighting
     short oldLight[3];          // compare with subsequent lighting to determine whether to refresh cell
