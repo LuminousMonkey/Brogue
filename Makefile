@@ -6,7 +6,7 @@ SDL_LIBS = $(shell pkg-config --libs)
 CURSES_LIBS = $(shell pkg-config --libs ncurses) -lm
 CURSES_CFLAGS = $(shell pkg-config --cflags ncurses)
 
-CFLAGS = -MMD -Wall -pedantic -Weverything -std=c99 -Isrc/brogue -Isrc/platform ${DEFINES}
+CFLAGS = -MMD -Wall -pedantic -std=c99 -Isrc/brogue -Isrc/platform ${DEFINES}
 RELEASENAME=brogue-1.7.3
 LASTTARGET := $(shell ./brogue --target)
 CC ?= gcc
