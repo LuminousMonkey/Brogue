@@ -22,6 +22,13 @@
  */
 
 extern tcell tmap[DCOLS][DROWS];						// grids with info about the map
+
+/*
+ * Permanent map.
+ *
+ * This holds map information that needs to be saved, it's things that
+ * can't be changed about a map.
+ */
 extern pcell pmap[DCOLS][DROWS];						// grids with info about the map
 extern short **scentMap;
 extern cellDisplayBuffer displayBuffer[COLS][ROWS];

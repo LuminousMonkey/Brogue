@@ -33,6 +33,16 @@ boolean cellHasTerrainFlag(short x, short y, unsigned long flagMask) {
 }
 #endif
 
+/*
+ * Given the x and y coordinate, checks the permanent map and returns
+ * true if cell at the coordinates is considered to be in a terrain
+ * loop.
+ *
+ * GLOBAL: pmap (from IncludeGlobals.h)
+ *
+ * TDOD: Figure out what this does.
+ * TODO: What is a terrain loop?
+ */
 static boolean checkLoopiness(const short x, const short y) {
   boolean inString;
   short newX, newY, dir, sdir;
@@ -383,14 +393,13 @@ static void addLoops(short **grid, short minimumPathingDistance) {
 // Returns true if everything went well, and false if we ran into a machine component
 // that was already there, as we don't want to build a machine around it.
 boolean addTileToMachineInteriorAndIterate(char interior[DCOLS][DROWS], short startX, short startY) {
-  short dir, newX, newY;
   boolean goodSoFar = true;
 
   interior[startX][startY] = true;
 
-  for (dir = 0; dir < 4 && goodSoFar; dir++) {
-    newX = startX + nbDirs[dir][0];
-    newY = startY + nbDirs[dir][1];
+  for (short dir = 0; dir < 4 && goodSoFar; dir++) {
+    short newX = startX + nbDirs[dir][0];
+    short newY = startY + nbDirs[dir][1];
     if (coordinatesAreInMap(newX, newY)) {
       if ((pmap[newX][newY].flags & HAS_ITEM)
           || ((pmap[newX][newY].flags & IS_IN_MACHINE) && !(pmap[newX][newY].flags & IS_GATE_SITE))) {
@@ -696,7 +705,6 @@ boolean fillInteriorForVestibuleMachine(char interior[DCOLS][DROWS], short bp, s
 }
 
 void redesignInterior(char interior[DCOLS][DROWS], short originX, short originY) {
-  short i, j, n, newX, newY;
   enum directions dir;
   short orphanList[20][2];
   short orphanCount = 0;
@@ -704,8 +712,8 @@ void redesignInterior(char interior[DCOLS][DROWS], short originX, short originY)
   const short roomFrequencies[ROOM_TYPE_COUNT] = {0, 1, 0, 0, 0, 0, 0};
   grid = allocGrid();
 
-  for (i=0; i<DCOLS; i++) {
-    for (j=0; j<DROWS; j++) {
+  for (short i = 0; i < DCOLS; i++) {
+    for (short j = 0; j < DROWS; j++) {
       if (interior[i][j]) {
         if (//(pmap[i][j].flags & IS_GATE_SITE) && pmap[i][j].machineNumber
                 //||
@@ -718,8 +726,8 @@ void redesignInterior(char interior[DCOLS][DROWS], short originX, short originY)
       } else if (cellIsPassableOrDoor(i, j)) {
         grid[i][j] = 1; // Treat existing level as already built (though shielded by a film of -1s).
         for (dir = 0; dir < 4; dir++) {
-          newX = i + nbDirs[dir][0];
-          newY = j + nbDirs[dir][1];
+          short newX = i + nbDirs[dir][0];
+          short newY = j + nbDirs[dir][1];
           if (coordinatesAreInMap(newX, newY)
               && interior[newX][newY]
               && (newX != originX || newY != originY)) {
@@ -743,7 +751,7 @@ void redesignInterior(char interior[DCOLS][DROWS], short originX, short originY)
   if (orphanCount > 0) {
     pathingGrid = allocGrid();
     costGrid = allocGrid();
-    for (n = 0; n < orphanCount; n++) {
+    for (short n = 0; n < orphanCount; n++) {
 
       if (D_INSPECT_MACHINES) {
         dumpLevelToScreen();
@@ -754,8 +762,8 @@ void redesignInterior(char interior[DCOLS][DROWS], short originX, short originY)
         temporaryMessage("Orphan detected:", true);
       }
 
-      for (i=0; i<DCOLS; i++) {
-        for (j=0; j<DROWS; j++) {
+      for (short i = 0; i < DCOLS; i++) {
+        for (short j = 0; j < DROWS; j++) {
           if (interior[i][j]) {
             if (grid[i][j] > 0) {
               pathingGrid[i][j] = 0;
@@ -772,12 +780,12 @@ void redesignInterior(char interior[DCOLS][DROWS], short originX, short originY)
       }
       dijkstraScan(pathingGrid, costGrid, false);
 
-      i = orphanList[n][0];
-      j = orphanList[n][1];
+      short i = orphanList[n][0];
+      short j = orphanList[n][1];
       while (pathingGrid[i][j] > 0) {
         for (dir = 0; dir < 4; dir++) {
-          newX = i + nbDirs[dir][0];
-          newY = j + nbDirs[dir][1];
+          short newX = i + nbDirs[dir][0];
+          short newY = j + nbDirs[dir][1];
 
           if (coordinatesAreInMap(newX, newY)
               && pathingGrid[newX][newY] < pathingGrid[i][j]) {
@@ -804,8 +812,8 @@ void redesignInterior(char interior[DCOLS][DROWS], short originX, short originY)
   }
 
   addLoops(grid, 10);
-  for(i=0; i<DCOLS; i++) {
-    for(j=0; j<DROWS; j++) {
+  for(short i = 0; i<DCOLS; i++) {
+    for(short j = 0; j<DROWS; j++) {
       if (interior[i][j]) {
         if (grid[i][j] >= 0) {
           pmap[i][j].layers[SURFACE] = pmap[i][j].layers[GAS] = NOTHING;
