@@ -1,6 +1,7 @@
 *.d
 obj
 bin/brogue
+bin/unit_tests
 .#*
 *.broguesave
 BrogueHighScores*
