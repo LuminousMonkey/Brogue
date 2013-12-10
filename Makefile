@@ -45,7 +45,7 @@ tcod : LIBS += $(TCOD_LIBS)
 tcod : CFLAGS += ${TCOD_CFLAGS}
 
 curses : DEFINES = ${CURSES_DEF}
-curses : LIBS = ${CURSES_LIBS}
+curses : LIBS += ${CURSES_LIBS}
 curses : CFLAGS += ${CURSES_CFLAGS}
 
 both: DEFINES = ${TCOD_DEF} ${CURSES_DEF}
@@ -64,7 +64,7 @@ ifeq (${TESTS},1)
 endif
 
 both : dirs bin/brogue
-curses : dirs bin/brogue
+curses : dirs $(PROG)
 tcod : dirs $(PROG)
 
 $(PROG): $(OBJFILES)
