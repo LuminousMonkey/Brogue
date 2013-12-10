@@ -2575,24 +2575,6 @@ void finishDoors() {
   }
 }
 
-void clearLevel() {
-  short i, j;
-
-  for( i=0; i<DCOLS; i++ ) {
-    for( j=0; j<DROWS; j++ ) {
-      pmap[i][j].layers[DUNGEON] = GRANITE;
-      pmap[i][j].layers[LIQUID] = NOTHING;
-      pmap[i][j].layers[GAS] = NOTHING;
-      pmap[i][j].layers[SURFACE] = NOTHING;
-      pmap[i][j].machineNumber = 0;
-      pmap[i][j].rememberedTerrain = NOTHING;
-      pmap[i][j].rememberedItemCategory = 0;
-      pmap[i][j].flags = 0;
-      pmap[i][j].volume = 0;
-    }
-  }
-}
-
 // Scans the map in random order looking for a good place to build a bridge.
 // If it finds one, it builds a bridge there, halts and returns true.
 boolean buildABridge() {
@@ -2702,7 +2684,7 @@ void digDungeon() {
 #endif
 
   // Clear level and fill with granite
-  clearLevel();
+  clearLevel(pmap);
 
   grid = allocGrid();
   carveDungeon(grid);

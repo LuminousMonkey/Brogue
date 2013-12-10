@@ -577,6 +577,12 @@ void updateColors() {
 	}
 }
 
+/*
+ * Move the player up, or down and create the level.
+ *
+ * stairDirection - -1 for moving down, 1 for moving up.
+ *                  0 if the player fell.
+ */
 void startLevel(short oldLevelNumber, short stairDirection) {
 	unsigned long oldSeed;
 	item *theItem;
@@ -748,21 +754,9 @@ void startLevel(short oldLevelNumber, short stairDirection) {
 		// restore level
         scentMap = levels[rogue.depthLevel - 1].scentMap;
 		timeAway = clamp(0, rogue.absoluteTurnNumber - levels[rogue.depthLevel - 1].awaySince, 30000);
-		
-		for (i=0; i<DCOLS; i++) {
-			for (j=0; j<DROWS; j++) {
-				for (layer = 0; layer < NUMBER_TERRAIN_LAYERS; layer++) {
-					pmap[i][j].layers[layer] = levels[rogue.depthLevel - 1].mapStorage[i][j].layers[layer];
-				}
-				pmap[i][j].volume = levels[rogue.depthLevel - 1].mapStorage[i][j].volume;
-				pmap[i][j].flags = (levels[rogue.depthLevel - 1].mapStorage[i][j].flags & PERMANENT_TILE_FLAGS);
-				pmap[i][j].rememberedAppearance = levels[rogue.depthLevel - 1].mapStorage[i][j].rememberedAppearance;
-				pmap[i][j].rememberedTerrain = levels[rogue.depthLevel - 1].mapStorage[i][j].rememberedTerrain;
-				pmap[i][j].rememberedItemCategory = levels[rogue.depthLevel - 1].mapStorage[i][j].rememberedItemCategory;
-				pmap[i][j].machineNumber = levels[rogue.depthLevel - 1].mapStorage[i][j].machineNumber;
-			}
-		}
-		
+
+        copyPmap(pmap, levels[rogue.depthLevel - 1].mapStorage);
+
 		setUpWaypoints();
 		
 		rogue.downLoc[0]	= levels[rogue.depthLevel - 1].downStairsLoc[0];

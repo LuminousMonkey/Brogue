@@ -215,76 +215,77 @@ enum tileType {
  * Flag based, so each must be a single bit.
  */
 enum tileFlags {
-    DISCOVERED = Fl(0),
-    /* Cell has sufficient light and is in field of view, ready to draw. */
-    VISIBLE = Fl(1),
-    HAS_PLAYER = Fl(2),
-    HAS_MONSTER = Fl(3),
-    /* Hidden monster on the square. */
-    HAS_DORMANT_MONSTER = Fl(4),
-    HAS_ITEM = Fl(5),
-    /*
-     * Player has unobstructed line of sight whether or not there is
-     * enough light.
-     */
-    IN_FIELD_OF_VIEW = Fl(6),
-    WAS_VISIBLE = Fl(7),
-    HAS_DOWN_STAIRS = Fl(8),
-    HAS_UP_STAIRS = Fl(9),
-    /* So that a player gains an automatic stealth bonus. */
-    IS_IN_SHADOW  = Fl(10),
-    MAGIC_MAPPED = Fl(11),
-    ITEM_DETECTED = Fl(12),
-    CLAIRVOYANT_VISIBLE = Fl(13),
-    WAS_CLAIRVOYANT_VISIBLE = Fl(14),
-    /* Magical blindness from a cursed ring of clairvoyance. */
-    CLAIRVOYANT_DARKENED = Fl(15),
-    /* So that fire does not spread asymmetrically. */
-    CAUGHT_FIRE_THIS_TURN = Fl(16),
-    /* So that traps do not trigger repeatedly while you stand on them. */
-    PRESSURE_PLATE_DEPRESSED = Fl(17),
-    /* Redraws will simply be pulled from the memory array, not
-     * recalculated. */
-    STABLE_MEMORY = Fl(18),
-    /* Keep track of where the player has stepped as he knows no traps
-     * are there. */
-    KNOWN_TO_BE_TRAP_FREE = Fl(19),
-    /* The yellow trail leading to the cursor. */
-    IS_IN_PATH = Fl(20),
-    /* This cell is part of a terrain loop. */
-    IN_LOOP = Fl(21),
-    /* If this cell is blocked, part of the map will be rendered
-     * inaccessible. */
-    IS_CHOKEPOINT = Fl(22),
-    /* Consider placing a locked door here. */
-    IS_GATE_SITE = Fl(23),
-    IS_IN_ROOM_MACHINE = Fl(24),
-    IS_IN_AREA_MACHINE = Fl(25),
-    /* Has been activated by machine power this turn (can probably be
-     * eliminate if needed) */
-    IS_POWERED = Fl(26),
-    /* No tunneling allowed! */
-    IMPREGNABLE = Fl(27),
-    /* Colors here will sparkle when the game is idle. */
-    TERRAIN_COLORS_DANCING = Fl(28),
-    /* Potions of telepathy let you see through other creatures' eyes. */
-    TELEPATHIC_VISIBLE = Fl(29),
-    /* Potions of telepathy let you see through other creatures' eyes. */
-    WAS_TELEPATHIC_VISIBLE = Fl(30),
+  NO_FLAGS = 0, /* No flags set. */
+  DISCOVERED = Fl(0),
+  /* Cell has sufficient light and is in field of view, ready to draw. */
+  VISIBLE = Fl(1),
+  HAS_PLAYER = Fl(2),
+  HAS_MONSTER = Fl(3),
+  /* Hidden monster on the square. */
+  HAS_DORMANT_MONSTER = Fl(4),
+  HAS_ITEM = Fl(5),
+  /*
+   * Player has unobstructed line of sight whether or not there is
+   * enough light.
+   */
+  IN_FIELD_OF_VIEW = Fl(6),
+  WAS_VISIBLE = Fl(7),
+  HAS_DOWN_STAIRS = Fl(8),
+  HAS_UP_STAIRS = Fl(9),
+  /* So that a player gains an automatic stealth bonus. */
+  IS_IN_SHADOW  = Fl(10),
+  MAGIC_MAPPED = Fl(11),
+  ITEM_DETECTED = Fl(12),
+  CLAIRVOYANT_VISIBLE = Fl(13),
+  WAS_CLAIRVOYANT_VISIBLE = Fl(14),
+  /* Magical blindness from a cursed ring of clairvoyance. */
+  CLAIRVOYANT_DARKENED = Fl(15),
+  /* So that fire does not spread asymmetrically. */
+  CAUGHT_FIRE_THIS_TURN = Fl(16),
+  /* So that traps do not trigger repeatedly while you stand on them. */
+  PRESSURE_PLATE_DEPRESSED = Fl(17),
+  /* Redraws will simply be pulled from the memory array, not
+   * recalculated. */
+  STABLE_MEMORY = Fl(18),
+  /* Keep track of where the player has stepped as he knows no traps
+   * are there. */
+  KNOWN_TO_BE_TRAP_FREE = Fl(19),
+  /* The yellow trail leading to the cursor. */
+  IS_IN_PATH = Fl(20),
+  /* This cell is part of a terrain loop. */
+  IN_LOOP = Fl(21),
+  /* If this cell is blocked, part of the map will be rendered
+   * inaccessible. */
+  IS_CHOKEPOINT = Fl(22),
+  /* Consider placing a locked door here. */
+  IS_GATE_SITE = Fl(23),
+  IS_IN_ROOM_MACHINE = Fl(24),
+  IS_IN_AREA_MACHINE = Fl(25),
+  /* Has been activated by machine power this turn (can probably be
+   * eliminate if needed) */
+  IS_POWERED = Fl(26),
+  /* No tunneling allowed! */
+  IMPREGNABLE = Fl(27),
+  /* Colors here will sparkle when the game is idle. */
+  TERRAIN_COLORS_DANCING = Fl(28),
+  /* Potions of telepathy let you see through other creatures' eyes. */
+  TELEPATHIC_VISIBLE = Fl(29),
+  /* Potions of telepathy let you see through other creatures' eyes. */
+  WAS_TELEPATHIC_VISIBLE = Fl(30),
 
-    HAS_STAIRS = (HAS_UP_STAIRS | HAS_DOWN_STAIRS),
-    /* Sacred ground; don't generate items here, or teleport randomly
-     * to it. */
-    IS_IN_MACHINE = (IS_IN_ROOM_MACHINE | IS_IN_AREA_MACHINE),
+  HAS_STAIRS = (HAS_UP_STAIRS | HAS_DOWN_STAIRS),
+  /* Sacred ground; don't generate items here, or teleport randomly
+   * to it. */
+  IS_IN_MACHINE = (IS_IN_ROOM_MACHINE | IS_IN_AREA_MACHINE),
 
-    PERMANENT_TILE_FLAGS = (DISCOVERED | MAGIC_MAPPED | ITEM_DETECTED |
-                            HAS_ITEM | HAS_DORMANT_MONSTER | HAS_UP_STAIRS |
-                            HAS_DOWN_STAIRS | PRESSURE_PLATE_DEPRESSED |
-                            STABLE_MEMORY | KNOWN_TO_BE_TRAP_FREE | IN_LOOP |
-                            IS_CHOKEPOINT | IS_GATE_SITE | IS_IN_MACHINE |
-                            IMPREGNABLE),
+  PERMANENT_TILE_FLAGS = (DISCOVERED | MAGIC_MAPPED | ITEM_DETECTED |
+                          HAS_ITEM | HAS_DORMANT_MONSTER | HAS_UP_STAIRS |
+                          HAS_DOWN_STAIRS | PRESSURE_PLATE_DEPRESSED |
+                          STABLE_MEMORY | KNOWN_TO_BE_TRAP_FREE | IN_LOOP |
+                          IS_CHOKEPOINT | IS_GATE_SITE | IS_IN_MACHINE |
+                          IMPREGNABLE),
 
-    ANY_KIND_OF_VISIBLE = (VISIBLE | CLAIRVOYANT_VISIBLE | TELEPATHIC_VISIBLE),
+  ANY_KIND_OF_VISIBLE = (VISIBLE | CLAIRVOYANT_VISIBLE | TELEPATHIC_VISIBLE),
 };
 
 #endif

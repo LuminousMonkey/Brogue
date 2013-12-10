@@ -66,6 +66,17 @@ typedef struct pcell {
 } pcell;
 
 /*
+ * Clears out the given permanent map.
+ */
+void clearLevel(struct pcell pmap[DCOLS][DROWS]);
+
+/*
+ * Copy a pmap struct from source to dest.
+ */
+void copyPmap(struct pcell dest[DCOLS][DROWS],
+              const struct pcell source[DCOLS][DROWS]);
+
+/*
  * Given coordinates on the map, return true if that location is in a
  * terrain loop.
  */

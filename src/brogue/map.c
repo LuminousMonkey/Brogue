@@ -9,8 +9,54 @@
 #include "map.h"
 #include "tiles.h"
 
-static bool coordinatesAreInMap(const short x, const short y) {
+static bool coordinatesAreInMap(const short x, const short y)
+{
   return (x >= 0 && x < DCOLS && y >= 0 && y < DROWS);
+}
+
+/*
+ * Clears out the level of the map.
+ */
+void clearLevel(struct pcell pmap[DCOLS][DROWS])
+{
+  for (long columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
+    for (long rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
+      pmap[columnIdx][rowIdx].layers[DUNGEON] = GRANITE;
+      pmap[columnIdx][rowIdx].layers[LIQUID] = NOTHING;
+      pmap[columnIdx][rowIdx].layers[GAS] = NOTHING;
+      pmap[columnIdx][rowIdx].layers[SURFACE] = NOTHING;
+      pmap[columnIdx][rowIdx].machineNumber = 0;
+      pmap[columnIdx][rowIdx].rememberedTerrain = NOTHING;
+      pmap[columnIdx][rowIdx].rememberedItemCategory = 0;
+      pmap[columnIdx][rowIdx].flags = NO_FLAGS;
+      pmap[columnIdx][rowIdx].volume = 0;
+    }
+  }
+}
+
+void copyPmap(struct pcell dest[DCOLS][DROWS],
+              const struct pcell source[DCOLS][DROWS])
+{
+  for (long columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
+    for (long rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
+      for (long layerIdx = 0; layerIdx < NUMBER_TERRAIN_LAYERS; ++layerIdx) {
+        dest[columnIdx][rowIdx].layers[layerIdx] =
+            source[columnIdx][rowIdx].layers[layerIdx];
+      }
+
+      dest[columnIdx][rowIdx].volume = source[columnIdx][rowIdx].volume;
+      dest[columnIdx][rowIdx].flags =
+          (source[columnIdx][rowIdx].flags & PERMANENT_TILE_FLAGS);
+      dest[columnIdx][rowIdx].rememberedAppearance =
+          source[columnIdx][rowIdx].rememberedAppearance;
+      dest[columnIdx][rowIdx].rememberedTerrain =
+          source[columnIdx][rowIdx].rememberedTerrain;
+      dest[columnIdx][rowIdx].rememberedItemCategory =
+          source[columnIdx][rowIdx].rememberedItemCategory;
+      dest[columnIdx][rowIdx].machineNumber =
+          source[columnIdx][rowIdx].machineNumber;
+    }
+  }
 }
 
 /*
@@ -24,7 +70,8 @@ static bool coordinatesAreInMap(const short x, const short y) {
  */
 bool checkLoopiness(struct pcell pmap[DCOLS][DROWS],
                     const short x, const short y,
-                    const short cDirs[8][2]) {
+                    const short cDirs[8][2])
+{
   bool inString;
   short newX, newY, dir, sdir;
   short numStrings, maxStringLength, currentStringLength;
