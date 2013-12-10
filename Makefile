@@ -1,30 +1,28 @@
 PROG := bin/brogue
+TEST_PROG := bin/unit_tests
+
+# For Debugging Makefile
+# OLD_SHELL := $(SHELL)
+# SHELL = $(warning [$@ ($^) ($?)])$(OLD_SHELL)
+
 # Need SDL flags for compiling.
 SDL_FLAGS = $(shell pkg-config --cflags sdl)
-SDL_LIBS = $(shell pkg-config --libs)
+SDL_LIBS = $(shell pkg-config --libs sdl)
 
 CURSES_LIBS = $(shell pkg-config --libs ncurses) -lm
 CURSES_CFLAGS = $(shell pkg-config --cflags ncurses)
 
-CFLAGS = -MMD -Wall -pedantic -std=c99 -Isrc/brogue -Isrc/platform ${DEFINES}
+CUNIT_LIBS = $(shell pkg-config --libs cunit)
+CUNIT_CFLAGS = $(shell pkg-config --cflags cunit)
+
+INCLUDES = -Isrc/brogue -Isrc/platform
+
+CFLAGS = -MMD -Wall -pedantic -std=c99 $(INCLUDES) ${DEFINES}
+LIBS =
 RELEASENAME=brogue-1.7.3
 LASTTARGET := $(shell ./brogue --target)
 CC ?= gcc
-OUTDIRS := obj/brogue obj/platform
-
-SRCFILES := $(wildcard src/brogue/*.c) $(wildcard src/platform/*.c)
-OBJFILES := $(patsubst src/%.c,obj/%.o,$(SRCFILES))
-DEPFILES := $(patsubst src/%.c,obj/%.d,$(SRCFILES))
-
-ifeq (${LASTTARGET},both)
-all : both
-else ifeq (${LASTTARGET},curses)
-all : curses
-else ifeq (${LASTTARGET},tcod)
-all : tcod
-else
-all : both
-endif
+OUTDIRS := obj/brogue obj/platform obj/tests obj/tests/brogue
 
 TCOD_DEF = -DBROGUE_TCOD
 TCOD_LIBS = $(shell pkg-config --libs sdl) -ltcod -Wl
@@ -39,48 +37,46 @@ all : $(PROG)
 dirs:
 	@mkdir -p $(OUTDIRS)
 
+SRCFILES := $(wildcard src/brogue/*.c) $(wildcard src/platform/*.c)
+OBJFILES := $(patsubst src/%.c,obj/%.o,$(SRCFILES))
+DEPFILES := $(patsubst src/%.c,obj/%.d,$(SRCFILES))
+
 tcod : DEFINES = ${TCOD_DEF}
-tcod : LIBS = ${TCOD_LIBS}
+tcod : LIBS += $(TCOD_LIBS)
 tcod : CFLAGS += ${TCOD_CFLAGS}
 
 curses : DEFINES = ${CURSES_DEF}
 curses : LIBS = ${CURSES_LIBS}
 curses : CFLAGS += ${CURSES_CFLAGS}
 
-both : DEFINES = ${TCOD_DEF} ${CURSES_DEF}
+both: DEFINES = ${TCOD_DEF} ${CURSES_DEF}
 both : LIBS = ${TCOD_LIBS} ${CURSES_LIBS}
 both: CFLAGS += ${TCOD_CFLAGS} ${CURSES_CFLAGS}
 
-ifeq (${LASTTARGET},both)
-both : bin/brogue
-tcod : clean bin/brogue
-curses : clean bin/brogue
-else ifeq (${LASTTARGET},curses)
-curses : bin/brogue
-tcod : clean bin/brogue
-both : clean bin/brogue
-else ifeq (${LASTTARGET},tcod)
-tcod : bin/brogue
-curses : clean bin/brogue
-both : clean bin/brogue
-else
+ifeq (${TESTS},1)
+  SRCFILES = $(wildcard src/tests/brogue/*.c) src/tests/unit_tests.c
+
+  LIBS += $(CUNIT_LIBS)
+  CFLAGS += ${CUNIT_CFLAGS}
+  PROG := $(TEST_PROG)
+  INCLUDES += -Itests/src/brogue
+  OBJFILES = $(patsubst src/%.c,obj/%.o,$(SRCFILES))
+  DEPFILES = $(patsubst src/%.c,obj/%.d,$(SRCFILES))
+endif
+
 both : dirs bin/brogue
 curses : dirs bin/brogue
-tcod : dirs bin/brogue
-endif
+tcod : dirs $(PROG)
 
 $(PROG): $(OBJFILES)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
-
-#bin/brogue : ${DEPENDENCIES} ${BROGUEFILES}
-#	$(CC) -O2 -march=i586 -o bin/brogue ${BROGUEFILES} ${LIBRARIES} -Wl,-rpath,.
 
 # Rule for making all *.c files in src to *.o files
 obj/%.o: src/%.c
 	$(CC) $(CFLAGS) $(DEFINES) -MF $(patsubst obj/%.o, obj/%.d,$@) -c $< -o $@
 
-clean : 
-	rm -f src/brogue/*.o src/platform/*.o bin/brogue
+clean:
+	rm -f src/brogue/*.o src/platform/*.o $(PROG) $(TEST_PROG)
 	rm -fr obj
 
 ${LIBTCODDIR} :
@@ -107,3 +103,4 @@ tar : both
 	$(wildcard src/platform/*.c) \
 	$(wildcard src/platform/*.h)
 
+-include $(SRCFILES:.c=.d)
