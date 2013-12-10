@@ -44,17 +44,9 @@ void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
             source[columnIdx][rowIdx].layers[layerIdx];
       }
 
-      dest[columnIdx][rowIdx].volume = source[columnIdx][rowIdx].volume;
+      dest[columnIdx][rowIdx] = source[columnIdx][rowIdx];
       dest[columnIdx][rowIdx].flags =
           (source[columnIdx][rowIdx].flags & PERMANENT_TILE_FLAGS);
-      dest[columnIdx][rowIdx].rememberedAppearance =
-          source[columnIdx][rowIdx].rememberedAppearance;
-      dest[columnIdx][rowIdx].rememberedTerrain =
-          source[columnIdx][rowIdx].rememberedTerrain;
-      dest[columnIdx][rowIdx].rememberedItemCategory =
-          source[columnIdx][rowIdx].rememberedItemCategory;
-      dest[columnIdx][rowIdx].machineNumber =
-          source[columnIdx][rowIdx].machineNumber;
     }
   }
 }
