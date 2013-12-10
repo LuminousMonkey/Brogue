@@ -20,7 +20,6 @@ INCLUDES = -Isrc/brogue -Isrc/platform
 CFLAGS = -MMD -Wall -pedantic -std=c99 $(INCLUDES) ${DEFINES}
 LIBS =
 RELEASENAME=brogue-1.7.3
-LASTTARGET := $(shell ./brogue --target)
 CC ?= gcc
 OUTDIRS := obj/brogue obj/platform obj/tests obj/tests/brogue
 
@@ -32,7 +31,7 @@ CURSES_DEF = -DBROGUE_CURSES
 
 .PHONY : clean dirs both curses tcod tar
 
-all : $(PROG)
+all: tcod
 
 dirs:
 	@mkdir -p $(OUTDIRS)
