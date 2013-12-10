@@ -21,6 +21,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "map.h"
+
 extern tcell tmap[DCOLS][DROWS];						// grids with info about the map
 
 /*
@@ -29,7 +31,7 @@ extern tcell tmap[DCOLS][DROWS];						// grids with info about the map
  * This holds map information that needs to be saved, it's things that
  * can't be changed about a map.
  */
-extern pcell pmap[DCOLS][DROWS];						// grids with info about the map
+extern struct pcell pmap[DCOLS][DROWS];						// grids with info about the map
 extern short **scentMap;
 extern cellDisplayBuffer displayBuffer[COLS][ROWS];
 extern short terrainRandomValues[DCOLS][DROWS][8];

@@ -55,7 +55,7 @@ typedef struct cellDisplayBuffer {
  * rememberedTerrain - What the player remembers as the terrain
  *                     (i.e. highest priority terrain upon last seeing)
  */
-typedef struct pcell {
+struct pcell {
   enum tileType layers[NUMBER_TERRAIN_LAYERS];
   unsigned long flags;
   unsigned short volume;
@@ -63,7 +63,7 @@ typedef struct pcell {
   cellDisplayBuffer rememberedAppearance;
   enum itemCategory rememberedItemCategory;
   enum tileType rememberedTerrain;
-} pcell;
+};
 
 /*
  * Clears out the given permanent map.
@@ -71,10 +71,10 @@ typedef struct pcell {
 void clearLevel(struct pcell pmap[DCOLS][DROWS]);
 
 /*
- * Copy a pmap struct from source to dest.
+ * Copy a pmap struct from source to dest. Including the layers.
  */
-void copyPmap(struct pcell dest[DCOLS][DROWS],
-              const struct pcell source[DCOLS][DROWS]);
+void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
+                       const struct pcell source[DCOLS][DROWS]);
 
 /*
  * Given coordinates on the map, return true if that location is in a

@@ -755,7 +755,7 @@ void startLevel(short oldLevelNumber, short stairDirection) {
         scentMap = levels[rogue.depthLevel - 1].scentMap;
 		timeAway = clamp(0, rogue.absoluteTurnNumber - levels[rogue.depthLevel - 1].awaySince, 30000);
 
-        copyPmap(pmap, levels[rogue.depthLevel - 1].mapStorage);
+        copyMapWithLayers(pmap, levels[rogue.depthLevel - 1].mapStorage);
 
 		setUpWaypoints();
 		

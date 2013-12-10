@@ -1810,7 +1810,7 @@ typedef struct playerCharacter {
 // Stores the necessary info about a level so it can be regenerated:
 typedef struct levelData {
     boolean visited;
-    pcell mapStorage[DCOLS][DROWS];
+    struct pcell mapStorage[DCOLS][DROWS];
     struct item *items;
     struct creature *monsters;
     struct creature *dormantMonsters;

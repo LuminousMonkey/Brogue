@@ -1629,7 +1629,7 @@ void commitDraws() {
 // Debug feature: display the level to the screen without regard to lighting, field of view, etc.
 void dumpLevelToScreen() {
 	short i, j;
-	pcell backup;
+	struct pcell backup;
 	
 	assureCosmeticRNG;
 	for (i=0; i<DCOLS; i++) {

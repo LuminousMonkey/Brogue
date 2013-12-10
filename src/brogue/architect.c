@@ -347,7 +347,7 @@ boolean addTileToMachineInteriorAndIterate(char interior[DCOLS][DROWS], short st
   return goodSoFar;
 }
 
-void copyMap(pcell from[DCOLS][DROWS], pcell to[DCOLS][DROWS]) {
+void copyMap(struct pcell from[DCOLS][DROWS], struct pcell to[DCOLS][DROWS]) {
   short i, j;
 
   for(i=0; i<DCOLS; i++) {
@@ -889,7 +889,7 @@ boolean buildAMachine(enum machineTypes bp,
 
   boolean DFSucceeded, terrainSucceeded, generateEverywhere, skipFeature[20], chooseBP, chooseLocation, tryAgain;
 
-  pcell levelBackup[DCOLS][DROWS];
+  struct pcell levelBackup[DCOLS][DROWS];
 
   creature *monst, *nextMonst, *torchBearer = NULL, *leader = NULL;
 

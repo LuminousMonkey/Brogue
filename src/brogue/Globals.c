@@ -24,7 +24,7 @@
 #include "Rogue.h"
 
 tcell tmap[DCOLS][DROWS];						// grids with info about the map
-pcell pmap[DCOLS][DROWS];
+struct pcell pmap[DCOLS][DROWS];
 short **scentMap;
 cellDisplayBuffer displayBuffer[COLS][ROWS];	// used to optimize plotCharWithColor
 short terrainRandomValues[DCOLS][DROWS][8];

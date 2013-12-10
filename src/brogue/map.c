@@ -34,8 +34,8 @@ void clearLevel(struct pcell pmap[DCOLS][DROWS])
   }
 }
 
-void copyPmap(struct pcell dest[DCOLS][DROWS],
-              const struct pcell source[DCOLS][DROWS])
+void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
+                       const struct pcell source[DCOLS][DROWS])
 {
   for (long columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
     for (long rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
