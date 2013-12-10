@@ -5,3 +5,4 @@ bin/unit_tests
 .#*
 *.broguesave
 BrogueHighScores*
+\#*#
