@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <SDL/SDL.h>
-#include <libtcod/libtcod.h>
+#include <libtcod.h>
 #include "platform.h"
 
 #if TCOD_TECHVERSION >= 0x01050103
