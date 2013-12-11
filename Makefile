@@ -9,7 +9,7 @@ TEST_PROG := bin/unit_tests
 SDL_FLAGS = $(shell pkg-config --cflags sdl)
 SDL_LIBS = $(shell pkg-config --libs sdl)
 
-CURSES_LIBS = $(shell pkg-config --libs ncurses) -lm
+CURSES_LIBS = $(shell pkg-config --libs ncurses)
 CURSES_CFLAGS = $(shell pkg-config --cflags ncurses)
 
 CUNIT_LIBS = $(shell pkg-config --libs cunit)
@@ -18,13 +18,13 @@ CUNIT_CFLAGS = $(shell pkg-config --cflags cunit)
 INCLUDES = -Isrc/brogue -Isrc/platform
 
 CFLAGS = -MMD -Wall -pedantic -std=c99 $(INCLUDES) ${DEFINES}
-LIBS =
+LIBS = -lm
 RELEASENAME=brogue-1.7.3
 CC ?= gcc
 OUTDIRS := obj/brogue obj/platform obj/tests obj/tests/brogue
 
 TCOD_DEF = -DBROGUE_TCOD
-TCOD_LIBS = $(shell pkg-config --libs sdl) -ltcod -Wl
+TCOD_LIBS = $(shell pkg-config --libs sdl) -ltcod
 TCOD_CFLAGS = $(shell pkg-config --cflags sdl)
 
 CURSES_DEF = -DBROGUE_CURSES
