@@ -37,9 +37,9 @@ void clearLevel(struct pcell pmap[DCOLS][DROWS])
 void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
                        const struct pcell source[DCOLS][DROWS])
 {
-  for (long columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
-    for (long rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
-      for (long layerIdx = 0; layerIdx < NUMBER_TERRAIN_LAYERS; ++layerIdx) {
+  for (int columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
+    for (int rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
+      for (int layerIdx = 0; layerIdx < NUMBER_TERRAIN_LAYERS; ++layerIdx) {
         dest[columnIdx][rowIdx].layers[layerIdx] =
             source[columnIdx][rowIdx].layers[layerIdx];
       }
@@ -47,6 +47,16 @@ void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
       dest[columnIdx][rowIdx] = source[columnIdx][rowIdx];
       dest[columnIdx][rowIdx].flags =
           (source[columnIdx][rowIdx].flags & PERMANENT_TILE_FLAGS);
+    }
+  }
+}
+
+void copyMap(struct pcell to[DCOLS][DROWS],
+             const struct pcell from[DCOLS][DROWS])
+{
+  for (int columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
+    for (int rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
+      to[columnIdx][rowIdx] = from[columnIdx][rowIdx];
     }
   }
 }

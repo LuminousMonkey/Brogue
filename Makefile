@@ -23,6 +23,10 @@ RELEASENAME=brogue-1.7.3
 CC ?= gcc
 OUTDIRS := obj/brogue obj/platform obj/tests obj/tests/brogue
 
+ifeq (${DEBUG},1)
+  CFLAGS += -g
+endif
+
 TCOD_DEF = -DBROGUE_TCOD
 TCOD_LIBS = $(shell pkg-config --libs sdl) -ltcod
 TCOD_CFLAGS = $(shell pkg-config --cflags sdl)
