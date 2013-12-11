@@ -15,7 +15,7 @@ CURSES_CFLAGS = $(shell pkg-config --cflags ncurses)
 CUNIT_LIBS = $(shell pkg-config --libs cunit)
 CUNIT_CFLAGS = $(shell pkg-config --cflags cunit)
 
-INCLUDES = -Isrc/brogue -Isrc/platform
+INCLUDES = -Isrc/brogue -Isrc/platform -I/usr/include/libtcod
 
 CFLAGS = -MMD -Wall -pedantic -std=c99 $(INCLUDES) ${DEFINES}
 LIBS = -lm
