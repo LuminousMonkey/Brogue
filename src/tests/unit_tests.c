@@ -26,7 +26,9 @@ int main() {
 
   /* add the tests to the suite */
   if (NULL == CU_add_test(pMapSuite, "Test Coordinate Limits",
-                          testCoordinatesAreInMap)) {
+                          testCoordinatesAreInMap) ||
+      NULL == CU_add_test(pMapSuite, "Test Copy Map Functions",
+                          testCopyFunctions)) {
     CU_cleanup_registry();
     return CU_get_error();
   }

@@ -35,14 +35,10 @@ void clearLevel(struct pcell pmap[DCOLS][DROWS])
 }
 
 void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
-                       const struct pcell source[DCOLS][DROWS])
+                       struct pcell source[DCOLS][DROWS])
 {
   for (int columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
     for (int rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
-      for (int layerIdx = 0; layerIdx < NUMBER_TERRAIN_LAYERS; ++layerIdx) {
-        dest[columnIdx][rowIdx].layers[layerIdx] =
-            source[columnIdx][rowIdx].layers[layerIdx];
-      }
 
       dest[columnIdx][rowIdx] = source[columnIdx][rowIdx];
       dest[columnIdx][rowIdx].flags =
@@ -52,7 +48,7 @@ void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
 }
 
 void copyMap(struct pcell to[DCOLS][DROWS],
-             const struct pcell from[DCOLS][DROWS])
+             struct pcell from[DCOLS][DROWS])
 {
   for (int columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
     for (int rowIdx = 0; rowIdx < DROWS; ++rowIdx) {

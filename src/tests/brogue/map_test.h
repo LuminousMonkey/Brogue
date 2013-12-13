@@ -11,4 +11,6 @@
 
 void testCoordinatesAreInMap();
 
+void testCopyFunctions();
+
 #endif
