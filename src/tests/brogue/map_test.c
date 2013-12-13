@@ -31,7 +31,7 @@ void testCopyFunctions() {
   /* Clear out everything. */
   clearLevel(test_pmap);
 
-  copyMapWithLayers(test_dest, test_pmap);
+  copyMap(test_dest, test_pmap, true);
 
   CU_ASSERT_EQUAL(memcmp(test_pmap, test_dest, sizeof(struct pcell) * DCOLS * DROWS), 0);
 
@@ -43,13 +43,13 @@ void testCopyFunctions() {
    */
   test_pmap[0][0].flags = DISCOVERED | IS_POWERED;
 
-  copyMapWithLayers(test_dest, test_pmap);
+  copyMap(test_dest, test_pmap, true);
 
   CU_ASSERT_NOT_EQUAL(memcmp(test_pmap, test_dest, sizeof(struct pcell) * DCOLS * DROWS), 0);
   CU_ASSERT_EQUAL(test_dest[0][0].flags, DISCOVERED);
 
   /* copyMap should copy the whole thing without modification. */
-  copyMap(test_dest, test_pmap);
+  copyMap(test_dest, test_pmap, false);
 
   CU_ASSERT_EQUAL(memcmp(test_pmap, test_dest, sizeof(struct pcell) * DCOLS * DROWS), 0);
 }

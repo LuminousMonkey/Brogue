@@ -34,25 +34,18 @@ void clearLevel(struct pcell pmap[DCOLS][DROWS])
   }
 }
 
-void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
-                       struct pcell source[DCOLS][DROWS])
-{
-  for (int columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
-    for (int rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
-
-      dest[columnIdx][rowIdx] = source[columnIdx][rowIdx];
-      dest[columnIdx][rowIdx].flags =
-          (source[columnIdx][rowIdx].flags & PERMANENT_TILE_FLAGS);
-    }
-  }
-}
-
 void copyMap(struct pcell to[DCOLS][DROWS],
-             struct pcell from[DCOLS][DROWS])
+             struct pcell from[DCOLS][DROWS],
+             boolean permanentFlagsOnly)
 {
   for (int columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
     for (int rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
       to[columnIdx][rowIdx] = from[columnIdx][rowIdx];
+
+      if (permanentFlagsOnly) {
+        to[columnIdx][rowIdx].flags =
+            (from[columnIdx][rowIdx].flags & PERMANENT_TILE_FLAGS);
+      }
     }
   }
 }

@@ -1092,7 +1092,7 @@ boolean buildAMachine(enum machineTypes bp,
   } while (tryAgain);
 
   // This is the point of no return. Back up the level so it can be restored if we have to abort this machine after this point.
-  copyMap(levelBackup, pmap);
+  copyMap(levelBackup, pmap, false);
 
   // Perform any transformations to the interior indicated by the blueprint flags, including expanding the interior if requested.
   prepareInteriorWithMachineFlags(interior, originX, originY, blueprintCatalog[bp].flags);
@@ -1451,7 +1451,7 @@ boolean buildAMachine(enum machineTypes bp,
             if (!i) {
               DEBUG printf("\nDepth %i: Failed to place blueprint %i because it requires an adoptive machine and we couldn't place one.", rogue.depthLevel, bp);
               // failure! abort!
-              copyMap(pmap, levelBackup);
+              copyMap(pmap, levelBackup, false);
               abortItemsAndMonsters(spawnedItems, spawnedMonsters);
               freeGrid(distanceMap);
               return false;
@@ -1556,7 +1556,7 @@ boolean buildAMachine(enum machineTypes bp,
                    rogue.depthLevel, bp, feat, feature->minimumInstanceCount, instance);
 
       // Restore the map to how it was before we touched it.
-      copyMap(pmap, levelBackup);
+      copyMap(pmap, levelBackup, false);
       abortItemsAndMonsters(spawnedItems, spawnedMonsters);
       freeGrid(distanceMap);
       return false;

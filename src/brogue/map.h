@@ -71,16 +71,11 @@ struct pcell {
 void clearLevel(struct pcell pmap[DCOLS][DROWS]);
 
 /*
- * Copy a pmap struct from source to dest. Including the layers.
- */
-void copyMapWithLayers(struct pcell dest[DCOLS][DROWS],
-                       struct pcell source[DCOLS][DROWS]);
-
-/*
  * Copy a pmap struct from source to dest.
  */
 void copyMap(struct pcell to[DCOLS][DROWS],
-             struct pcell from[DCOLS][DROWS]);
+             struct pcell from[DCOLS][DROWS],
+             boolean permanentFlagsOnly);
 
 /*
  * Given coordinates on the map, return true if that location is in a
