@@ -682,7 +682,6 @@ boolean cellHasTerrainFlag(short x, short y, unsigned long flagMask);
                                             || (cellHasTMFlag((x), (y), (TM_IS_SECRET | TM_PROMOTES_WITH_KEY | TM_CONNECTS_LEVEL)) \
                                                 && cellHasTerrainFlag((x), (y), T_OBSTRUCTS_PASSABILITY)))
 
-#define coordinatesAreInMap(x, y)           ((x) >= 0 && (x) < DCOLS    && (y) >= 0 && (y) < DROWS)
 #define coordinatesAreInWindow(x, y)        ((x) >= 0 && (x) < COLS     && (y) >= 0 && (y) < ROWS)
 #define mapToWindowX(x)                     ((x) + STAT_BAR_WIDTH + 1)
 #define mapToWindowY(y)                     ((y) + MESSAGE_LINES)

@@ -66,6 +66,11 @@ struct pcell {
 };
 
 /*
+ * Given x, y in map?
+ */
+bool coordinatesAreInMap(const short x, const short y);
+
+/*
  * Clears out the given permanent map.
  */
 void clearLevel(struct pcell pmap[DCOLS][DROWS]);

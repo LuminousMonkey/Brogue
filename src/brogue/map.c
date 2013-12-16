@@ -12,7 +12,7 @@
 #include "map.h"
 #include "tiles.h"
 
-static bool coordinatesAreInMap(const short x, const short y)
+bool coordinatesAreInMap(const short x, const short y)
 {
   return (x >= 0 && x < DCOLS && y >= 0 && y < DROWS);
 }
