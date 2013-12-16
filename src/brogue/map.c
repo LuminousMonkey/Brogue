@@ -18,32 +18,15 @@ static bool coordinatesAreInMap(const short x, const short y)
 }
 
 /*
- * Clear out cell display buffer.
- */
-static void clearCellDisplayBuffer(struct cellDisplayBuffer *bufferToClear)
-{
-  memset(bufferToClear, 0, sizeof(struct cellDisplayBuffer));
-}
-
-/*
  * Clears out the level of the map.
  */
 void clearLevel(struct pcell pmap[DCOLS][DROWS])
 {
   if (pmap != NULL) {
-    memset(pmap, 999, sizeof(struct pcell) * DCOLS * DROWS);
+    memset(pmap, 0, sizeof(struct pcell) * DCOLS * DROWS);
     for (int columnIdx = 0; columnIdx < DCOLS; ++columnIdx) {
       for (int rowIdx = 0; rowIdx < DROWS; ++rowIdx) {
         pmap[columnIdx][rowIdx].layers[DUNGEON] = GRANITE;
-        pmap[columnIdx][rowIdx].layers[LIQUID] = NOTHING;
-        pmap[columnIdx][rowIdx].layers[GAS] = NOTHING;
-        pmap[columnIdx][rowIdx].layers[SURFACE] = NOTHING;
-        pmap[columnIdx][rowIdx].flags = NO_FLAGS;
-        pmap[columnIdx][rowIdx].volume = 0;
-        pmap[columnIdx][rowIdx].machineNumber = 0;
-        clearCellDisplayBuffer(&pmap[columnIdx][rowIdx].rememberedAppearance);
-        pmap[columnIdx][rowIdx].rememberedItemCategory = 0;
-        pmap[columnIdx][rowIdx].rememberedTerrain = NOTHING;
       }
     }
   }
