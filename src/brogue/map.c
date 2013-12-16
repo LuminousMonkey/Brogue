@@ -6,6 +6,9 @@
  * All map related operations should go in here.
  */
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "map.h"
 #include "tiles.h"
 
