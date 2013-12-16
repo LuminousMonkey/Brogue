@@ -25,12 +25,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include "PlatformDefines.h"
-#include "tiles.h"
-#include "map.h"
-#include "defines.h"
+
 #include "color.h"
-#include "types.h"
 #include "creature.h"
+#include "defines.h"
+#include "features.h"
+#include "light.h"
+#include "map.h"
+#include "random.h"
+#include "tiles.h"
+#include "types.h"
 
 // unicode: comment this line to revert to ASCII
 
@@ -338,64 +342,6 @@ enum textEntryTypes {
 };
 
 #define NUMBER_DYNAMIC_COLORS   6
-
-enum lightType {
-    NO_LIGHT,
-    MINERS_LIGHT,
-    BURNING_CREATURE_LIGHT,
-    WISP_LIGHT,
-    SALAMANDER_LIGHT,
-    IMP_LIGHT,
-    PIXIE_LIGHT,
-    LICH_LIGHT,
-    FLAMEDANCER_LIGHT,
-    SENTINEL_LIGHT,
-    UNICORN_LIGHT,
-    IFRIT_LIGHT,
-    PHOENIX_LIGHT,
-    PHOENIX_EGG_LIGHT,
-    SPECTRAL_BLADE_LIGHT,
-    SPECTRAL_IMAGE_LIGHT,
-    SPARK_TURRET_LIGHT,
-    BOLT_LIGHT_SOURCE,
-    TELEPATHY_LIGHT,
-
-    SCROLL_PROTECTION_LIGHT,
-    SCROLL_ENCHANTMENT_LIGHT,
-    POTION_STRENGTH_LIGHT,
-    EMPOWERMENT_LIGHT,
-    GENERIC_FLASH_LIGHT,
-    FALLEN_TORCH_FLASH_LIGHT,
-    SUMMONING_FLASH_LIGHT,
-    EXPLOSION_FLARE_LIGHT,
-
-    TORCH_LIGHT,
-    LAVA_LIGHT,
-    SUN_LIGHT,
-    DARKNESS_PATCH_LIGHT,
-    FUNGUS_LIGHT,
-    FUNGUS_FOREST_LIGHT,
-    LUMINESCENT_ALGAE_BLUE_LIGHT,
-    LUMINESCENT_ALGAE_GREEN_LIGHT,
-    ECTOPLASM_LIGHT,
-    UNICORN_POOP_LIGHT,
-    EMBER_LIGHT,
-    FIRE_LIGHT,
-    BRIMSTONE_FIRE_LIGHT,
-    EXPLOSION_LIGHT,
-    INCENDIARY_DART_LIGHT,
-    PORTAL_ACTIVATE_LIGHT,
-    CONFUSION_GAS_LIGHT,
-    DARKNESS_CLOUD_LIGHT,
-    FORCEFIELD_LIGHT,
-    CRYSTAL_WALL_LIGHT,
-    CANDLE_LIGHT,
-    HAUNTED_TORCH_LIGHT,
-    GLYPH_LIGHT_DIM,
-    GLYPH_LIGHT_BRIGHT,
-    DESCENT_LIGHT,
-    NUMBER_LIGHT_KINDS
-};
 
 enum keyKind {
     KEY_DOOR,
@@ -803,12 +749,6 @@ typedef struct tcell {          // transient cell; stuff we don't need to rememb
     short oldLight[3];          // compare with subsequent lighting to determine whether to refresh cell
 } tcell;
 
-typedef struct randomRange {
-    short lowerBound;
-    short upperBound;
-    short clumpFactor;
-} randomRange;
-
 enum itemFlags {
     ITEM_IDENTIFIED         = Fl(0),
     ITEM_EQUIPPED           = Fl(1),
@@ -880,270 +820,6 @@ typedef struct itemTable {
     boolean called;
     char description[1500];
 } itemTable;
-
-enum dungeonFeatureTypes {
-    DF_GRANITE_COLUMN = 1,
-    DF_CRYSTAL_WALL,
-    DF_LUMINESCENT_FUNGUS,
-    DF_GRASS,
-    DF_DEAD_GRASS,
-    DF_BONES,
-    DF_RUBBLE,
-    DF_FOLIAGE,
-    DF_FUNGUS_FOREST,
-    DF_DEAD_FOLIAGE,
-
-    DF_SUNLIGHT,
-    DF_DARKNESS,
-
-    DF_SHOW_DOOR,
-    DF_SHOW_POISON_GAS_TRAP,
-    DF_SHOW_PARALYSIS_GAS_TRAP,
-    DF_SHOW_TRAPDOOR_HALO,
-    DF_SHOW_TRAPDOOR,
-    DF_SHOW_CONFUSION_GAS_TRAP,
-    DF_SHOW_FLAMETHROWER_TRAP,
-    DF_SHOW_FLOOD_TRAP,
-    DF_SHOW_NET_TRAP,
-
-    DF_RED_BLOOD,
-    DF_GREEN_BLOOD,
-    DF_PURPLE_BLOOD,
-    DF_WORM_BLOOD,
-    DF_ACID_BLOOD,
-    DF_ASH_BLOOD,
-    DF_EMBER_BLOOD,
-    DF_ECTOPLASM_BLOOD,
-    DF_RUBBLE_BLOOD,
-    DF_ROT_GAS_BLOOD,
-
-    DF_VOMIT,
-    DF_BLOAT_DEATH,
-    DF_BLOAT_EXPLOSION,
-    DF_BLOOD_EXPLOSION,
-    DF_FLAMEDANCER_CORONA,
-
-    DF_MUTATION_EXPLOSION,
-    DF_MUTATION_LICHEN,
-
-    DF_REPEL_CREATURES,
-    DF_ROT_GAS_PUFF,
-    DF_STEAM_PUFF,
-    DF_STEAM_ACCUMULATION,
-    DF_METHANE_GAS_PUFF,
-    DF_SALAMANDER_FLAME,
-    DF_URINE,
-    DF_UNICORN_POOP,
-    DF_PUDDLE,
-    DF_ASH,
-    DF_ECTOPLASM_DROPLET,
-    DF_FORCEFIELD,
-    DF_LICHEN_GROW,
-    DF_TUNNELIZE,
-    DF_SHATTERING_SPELL,
-
-    DF_TRAMPLED_FOLIAGE,
-    DF_SMALL_DEAD_GRASS,
-    DF_FOLIAGE_REGROW,
-    DF_TRAMPLED_FUNGUS_FOREST,
-    DF_FUNGUS_FOREST_REGROW,
-
-    // brimstone
-    DF_ACTIVE_BRIMSTONE,
-    DF_INERT_BRIMSTONE,
-
-    // bloodwort
-    DF_BLOODFLOWER_PODS_GROW_INITIAL,
-    DF_BLOODFLOWER_PODS_GROW,
-    DF_BLOODFLOWER_POD_BURST,
-
-    // algae
-    DF_BUILD_ALGAE_WELL,
-    DF_ALGAE_1,
-    DF_ALGAE_2,
-    DF_ALGAE_REVERT,
-
-    DF_OPEN_DOOR,
-    DF_CLOSED_DOOR,
-    DF_OPEN_IRON_DOOR_INERT,
-    DF_ITEM_CAGE_OPEN,
-    DF_ITEM_CAGE_CLOSE,
-    DF_ALTAR_INERT,
-    DF_ALTAR_RETRACT,
-    DF_PORTAL_ACTIVATE,
-    DF_INACTIVE_GLYPH,
-    DF_ACTIVE_GLYPH,
-    DF_SILENT_GLYPH_GLOW,
-    DF_GUARDIAN_STEP,
-    DF_MIRROR_TOTEM_STEP,
-    DF_GLYPH_CIRCLE,
-    DF_REVEAL_LEVER,
-    DF_PULL_LEVER,
-    DF_CREATE_LEVER,
-
-    DF_PLAIN_FIRE,
-    DF_GAS_FIRE,
-    DF_EXPLOSION_FIRE,
-    DF_DART_EXPLOSION,
-    DF_BRIMSTONE_FIRE,
-    DF_BRIDGE_FIRE,
-    DF_FLAMETHROWER,
-    DF_EMBERS,
-    DF_EMBERS_PATCH,
-    DF_OBSIDIAN,
-    DF_ITEM_FIRE,
-    DF_CREATURE_FIRE,
-
-    DF_FLOOD,
-    DF_FLOOD_2,
-    DF_FLOOD_DRAIN,
-    DF_HOLE_2,
-    DF_HOLE_DRAIN,
-
-    DF_POISON_GAS_CLOUD,
-    DF_CONFUSION_GAS_TRAP_CLOUD,
-    DF_NET,
-    DF_METHANE_GAS_ARMAGEDDON,
-
-    // potions
-    DF_POISON_GAS_CLOUD_POTION,
-    DF_PARALYSIS_GAS_CLOUD_POTION,
-    DF_CONFUSION_GAS_CLOUD_POTION,
-    DF_INCINERATION_POTION,
-    DF_DARKNESS_POTION,
-    DF_HOLE_POTION,
-    DF_LICHEN_PLANTED,
-
-    // other items
-    DF_ARMOR_IMMOLATION,
-    DF_STAFF_HOLE,
-    DF_STAFF_HOLE_EDGE,
-
-    // vampire in coffin
-    DF_COFFIN_BURSTS,
-    DF_COFFIN_BURNS,
-    DF_TRIGGER_AREA,
-
-    // throwing tutorial -- button in chasm
-    DF_CAGE_DISAPPEARS,
-    DF_MEDIUM_HOLE,
-    DF_MEDIUM_LAVA_POND,
-    DF_MACHINE_PRESSURE_PLATE_USED,
-
-    // rat trap
-    DF_WALL_CRACK,
-
-    // wooden barricade at entrance
-    DF_WOODEN_BARRICADE_BURN,
-
-    // wooden barricade around altar, dead grass all around
-    DF_SURROUND_WOODEN_BARRICADE,
-
-    // pools of water that, when triggered, slowly expand to fill the room
-    DF_SPREADABLE_WATER,
-    DF_SHALLOW_WATER,
-    DF_WATER_SPREADS,
-    DF_SPREADABLE_WATER_POOL,
-    DF_SPREADABLE_DEEP_WATER_POOL,
-
-    // when triggered, the ground gradually turns into chasm:
-    DF_SPREADABLE_COLLAPSE,
-    DF_COLLAPSE,
-    DF_COLLAPSE_SPREADS,
-    DF_ADD_MACHINE_COLLAPSE_EDGE_DORMANT,
-
-    // when triggered, a bridge appears:
-    DF_BRIDGE_ACTIVATE,
-    DF_BRIDGE_ACTIVATE_ANNOUNCE,
-    DF_BRIDGE_APPEARS,
-    DF_ADD_DORMANT_CHASM_HALO,
-
-    // when triggered, the lava retracts:
-    DF_LAVA_RETRACTABLE,
-    DF_RETRACTING_LAVA,
-    DF_OBSIDIAN_WITH_STEAM,
-
-    // when triggered, the door seals and poison gas fills the room
-    DF_SHOW_POISON_GAS_VENT,
-    DF_POISON_GAS_VENT_OPEN,
-    DF_ACTIVATE_PORTCULLIS,
-    DF_OPEN_PORTCULLIS,
-    DF_VENT_SPEW_POISON_GAS,
-
-    // when triggered, pilot light ignites and explosive gas fills the room
-    DF_SHOW_METHANE_VENT,
-    DF_METHANE_VENT_OPEN,
-    DF_VENT_SPEW_METHANE,
-    DF_PILOT_LIGHT,
-
-    // paralysis trap: trigger plate with gas vents nearby
-    DF_DISCOVER_PARALYSIS_VENT,
-    DF_PARALYSIS_VENT_SPEW,
-    DF_REVEAL_PARALYSIS_VENT_SILENTLY,
-
-    // thematic dungeon
-    DF_AMBIENT_BLOOD,
-
-    // statues crack for a few turns and then shatter, revealing the monster inside
-    DF_CRACKING_STATUE,
-    DF_STATUE_SHATTER,
-
-    // a turret appears:
-    DF_TURRET_EMERGE,
-
-    // an elaborate worm catacomb opens up
-    DF_WORM_TUNNEL_MARKER_DORMANT,
-    DF_WORM_TUNNEL_MARKER_ACTIVE,
-    DF_GRANITE_CRUMBLES,
-    DF_WALL_OPEN,
-
-    // the room gradually darkens
-    DF_DARKENING_FLOOR,
-    DF_DARK_FLOOR,
-    DF_HAUNTED_TORCH_TRANSITION,
-    DF_HAUNTED_TORCH,
-
-    // bubbles rise from the mud and bog monsters spawn
-    DF_MUD_DORMANT,
-    DF_MUD_ACTIVATE,
-
-    // idyll:
-    DF_WATER_POOL,
-    DF_DEEP_WATER_POOL,
-
-    // swamp:
-    DF_SWAMP_WATER,
-    DF_SWAMP,
-    DF_SWAMP_MUD,
-
-    // camp:
-    DF_HAY,
-    DF_JUNK,
-
-    // remnants:
-    DF_REMNANT,
-    DF_REMNANT_ASH,
-
-    // chasm catwalk:
-    DF_CHASM_HOLE,
-    DF_CATWALK_BRIDGE,
-
-    // lake catwalk:
-    DF_LAKE_CELL,
-    DF_LAKE_HALO,
-
-    // worm den:
-    DF_WALL_SHATTER,
-
-    // monster cages open:
-    DF_MONSTER_CAGE_OPENS,
-
-    // goblin warren:
-    DF_STENCH_BURN,
-    DF_STENCH_SMOLDER,
-
-    NUMBER_DUNGEON_FEATURES,
-};
 
 typedef struct lightSource {
     const color *lightColor;
@@ -1444,27 +1120,6 @@ enum monsterBookkeepingFlags {
     MONST_HAS_SOUL                  = Fl(21),   // slaying the monster will count toward weapon auto-ID
 };
 
-// Defines all creatures, which include monsters and the player:
-typedef struct creatureType {
-    enum monsterTypes monsterID; // index number for the monsterCatalog
-    char monsterName[COLS];
-    uchar displayChar;
-    const color *foreColor;
-    short maxHP;
-    short defense;
-    short accuracy;
-    randomRange damage;
-    long turnsBetweenRegen;     // turns to wait before regaining 1 HP
-    short movementSpeed;
-    short attackSpeed;
-    enum dungeonFeatureTypes bloodType;
-    enum lightType intrinsicLightType;
-    short DFChance;                     // percent chance to spawn the dungeon feature per awake turn
-    enum dungeonFeatureTypes DFType;    // kind of dungeon feature
-    unsigned long flags;
-    unsigned long abilityFlags;
-} creatureType;
-
 typedef struct monsterWords {
     char flavorText[COLS*5];
     char absorbing[40];
@@ -1473,7 +1128,6 @@ typedef struct monsterWords {
     char DFMessage[DCOLS * 2];
     char summonMessage[DCOLS * 2];
 } monsterWords;
-
 enum creatureStates {
     MONSTER_SLEEPING,
     MONSTER_TRACKING_SCENT,

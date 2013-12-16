@@ -3,11 +3,18 @@
  *
  * Copyright 2013. All rights reserved.
  *
- * Create realted functions, which covers monsters and the player.
+ * Creature functions, which covers monsters and the player.
  */
 
 #ifndef CREATURE_H_
 #define CREATURE_H_
+
+#include "color.h"
+#include "defines.h"
+#include "features.h"
+#include "light.h"
+#include "random.h"
+#include "types.h"
 
 enum monsterTypes {
     MK_YOU,
@@ -83,5 +90,26 @@ enum monsterTypes {
 
     NUMBER_MONSTER_KINDS
 };
+
+// Defines all creatures, which include monsters and the player:
+typedef struct creatureType {
+    enum monsterTypes monsterID; // index number for the monsterCatalog
+    char monsterName[COLS];
+    uchar displayChar;
+    const struct color *foreColor;
+    short maxHP;
+    short defense;
+    short accuracy;
+    struct randomRange damage;
+    long turnsBetweenRegen;     // turns to wait before regaining 1 HP
+    short movementSpeed;
+    short attackSpeed;
+    enum dungeonFeatureTypes bloodType;
+    enum lightType intrinsicLightType;
+    short DFChance;                     // percent chance to spawn the dungeon feature per awake turn
+    enum dungeonFeatureTypes DFType;    // kind of dungeon feature
+    unsigned long flags;
+    unsigned long abilityFlags;
+} creatureType;
 
 #endif
