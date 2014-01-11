@@ -11,6 +11,42 @@
 #define ITEMS_H_
 
 #include "defines.h"
+#include "creature.h"
+#include "random.h"
+
+#define KEY_ID_MAXIMUM  20
+
+typedef struct keyLocationProfile {
+        short x;
+        short y;
+        short machine;
+        boolean disposableHere;
+} keyLocationProfile;
+
+typedef struct item {
+    unsigned short category;
+    short kind;
+    unsigned long flags;
+    randomRange damage;
+    short armor;
+    short charges;
+    short enchant1;
+    short enchant2;
+    enum monsterTypes vorpalEnemy;
+    short strengthRequired;
+    unsigned short quiverNumber;
+    uchar displayChar;
+    color *foreColor;
+    color *inventoryColor;
+    short quantity;
+    char inventoryLetter;
+    char inscription[DCOLS];
+    short xLoc;
+    short yLoc;
+    keyLocationProfile keyLoc[KEY_ID_MAXIMUM];
+    short keyZ;
+    struct item *nextItem;
+} item;
 
 enum itemCategory {
     FOOD = Fl(0),
@@ -35,5 +71,9 @@ enum itemCategory {
     ALL_ITEMS =  (FOOD | POTION | WEAPON | ARMOR | STAFF | WAND | SCROLL |
                   RING | CHARM | GOLD | AMULET | GEM | KEY),
 };
+
+void addLocationToKey(item *theItem, short x, short y, boolean disposableHere);
+
+void addMachineNumberToKey(item *theItem, short machineNumber, boolean disposableHere);
 
 #endif

@@ -773,40 +773,6 @@ enum itemFlags {
     ITEM_PLAYER_AVOIDS      = Fl(21),   // explore and travel will try to avoid picking the item up
 };
 
-#define KEY_ID_MAXIMUM  20
-
-typedef struct keyLocationProfile {
-    short x;
-    short y;
-    short machine;
-    boolean disposableHere;
-} keyLocationProfile;
-
-typedef struct item {
-    unsigned short category;
-    short kind;
-    unsigned long flags;
-    randomRange damage;
-    short armor;
-    short charges;
-    short enchant1;
-    short enchant2;
-    enum monsterTypes vorpalEnemy;
-    short strengthRequired;
-    unsigned short quiverNumber;
-    uchar displayChar;
-    color *foreColor;
-    color *inventoryColor;
-    short quantity;
-    char inventoryLetter;
-    char inscription[DCOLS];
-    short xLoc;
-    short yLoc;
-    keyLocationProfile keyLoc[KEY_ID_MAXIMUM];
-    short keyZ;
-    struct item *nextItem;
-} item;
-
 typedef struct itemTable {
     char *name;
     char *flavor;
