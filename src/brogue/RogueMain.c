@@ -26,6 +26,8 @@
 #include <math.h>
 #include <time.h>
 
+#include "utility.h"
+
 void rogueMain() {
 	previousGameSeed = 0;
 	initializeBrogueSaveLocation();
@@ -39,17 +41,6 @@ void executeEvent(rogueEvent *theEvent) {
 	} else if (theEvent->eventType == MOUSE_UP
 			   || theEvent->eventType == RIGHT_MOUSE_UP) {
 		executeMouseClick(theEvent);
-	}
-}
-
-boolean fileExists(const char *pathname) {
-	FILE *openedFile;
-	openedFile = fopen(pathname, "rb");
-	if (openedFile) {
-		fclose(openedFile);
-		return true;
-	} else {
-		return false;
 	}
 }
 

@@ -56,7 +56,7 @@ static void auditLoop(const short x, const short y, char grid[DCOLS][DROWS]) {
 // Returns 10000 if the area included an area machine.
 static short floodFillCount(char results[DCOLS][DROWS],
                             char passMap[DCOLS][DROWS],
-                            short startX, short startY) {
+                            const short startX, const short startY) {
   short count;
 
   count = (passMap[startX][startY] == 2 ? 5000 : 1);
@@ -87,7 +87,7 @@ static short floodFillCount(char results[DCOLS][DROWS],
 //      Three means it is the center of a T-intersection or something similar.
 //      Four means it is in the intersection of two hallways.
 //      Five or more means there is a bug.
-short passableArcCount(short x, short y) {
+short passableArcCount(const short x, const short y) {
   short arcCount;
 
 #ifdef BROGUE_ASSERTS
@@ -110,7 +110,7 @@ short passableArcCount(short x, short y) {
 }
 
 // locates all loops and chokepoints
-void analyzeMap(boolean calculateChokeMap) {
+void analyzeMap(const boolean calculateChokeMap) {
   short newX, newY, oldX, oldY, passableArcCount;
   char grid[DCOLS][DROWS], passMap[DCOLS][DROWS];
   boolean designationSurvives;
