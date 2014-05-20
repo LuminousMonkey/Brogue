@@ -32,6 +32,30 @@ typedef struct color {
     boolean colorDances;
 } color;
 
+/*
+ * applyColorMultiplier
+ *
+ * Given a base color, and a multiplier, update the basecolor by the
+ * multiplier amount.
+ */
+void applyColorMultiplier(color *baseColor, const color *multiplierColor);
+
+/*
+ * applyColorAverage
+ *
+ */
+void applyColorAverage(color *baseColor,
+                       const color *newColor,
+                       short averageWeight);
+
+void applyColorAugment(color *baseColor,
+                       const color *augmentingColor,
+                       short augmentWeight);
+
+void applyColorScalar(color *baseColor, short scalar);
+void applyColorBounds(color *baseColor, short lowerBound, short upperBound);
+void desaturate(color *baseColor, short weight);
+
 // basic colors
 extern const struct color white;
 extern const struct color gray;
@@ -68,7 +92,6 @@ extern const struct color dominationColor;
 extern const struct color empowermentColor;
 extern const struct color fireBoltColor;
 extern const struct color flamedancerCoronaColor;
-//extern const struct color shieldingColor;
 extern const struct color shieldingColor;
 
 // tile colors
@@ -81,7 +104,6 @@ extern const struct color wallBackColorStart;
 extern const struct color wallBackColorEnd;
 
 extern const struct color mudWallForeColor;
-//extern const struct color mudWallForeColor;
 extern const struct color mudWallBackColor;
 
 extern const struct color graniteBackColor;
@@ -106,7 +128,7 @@ extern const struct color carpetForeColor;
 extern const struct color carpetBackColor;
 extern const struct color doorForeColor;
 extern const struct color doorBackColor;
-//extern const struct color ironDoorForeColor;
+
 extern const struct color ironDoorForeColor;
 extern const struct color ironDoorBackColor;
 extern const struct color bridgeFrontColor;
@@ -114,15 +136,6 @@ extern const struct color bridgeBackColor;
 extern const struct color statueBackColor;
 extern const struct color glyphColor;
 extern const struct color glyphLightColor;
-
-//extern const struct color deepWaterForeColor;
-//color deepWaterBackColor;
-//extern const struct color deepWaterBackColorStart;
-//extern const struct color deepWaterBackColorEnd;
-//extern const struct color shallowWaterForeColor;
-//color shallowWaterBackColor;
-//extern const struct color shallowWaterBackColorStart;
-//extern const struct color shallowWaterBackColorEnd;
 
 extern const struct color deepWaterForeColor;
 extern const struct color deepWaterBackColor;
@@ -200,12 +213,9 @@ extern const struct color minersLightStartColor;
 extern const struct color minersLightEndColor;
 extern const struct color torchColor;
 extern const struct color torchLightColor;
-//extern const struct color hauntedTorchColor;
 extern const struct color hauntedTorchColor;
-//extern const struct color hauntedTorchLightColor;
 extern const struct color hauntedTorchLightColor;
 extern const struct color ifritLightColor;
-//extern const struct color unicornLightColor;
 extern const struct color unicornLightColor;
 extern const struct color wispLightColor;
 extern const struct color summonedImageLightColor;
@@ -290,19 +300,9 @@ extern const struct color backgroundMessageColor;
 
 extern const struct color superVictoryColor;
 
-//extern const struct color flameSourceColor;
-//extern const struct color flameSourceColor;
-//extern const struct color flameSourceColor;
-//extern const struct color flameSourceColor;
-//extern const struct color flameSourceColor;
 extern const struct color flameSourceColor;
 
-//extern const struct color flameTitleColor;
-//extern const struct color flameTitleColor;
 extern const struct color flameTitleColor;
-//extern const struct color flameTitleColor;
-//extern const struct color flameTitleColor;
-//extern const struct color flameTitleColor;
 
 extern const struct color *dynamicColors[NUMBER_DYNAMIC_COLORS][3];
 

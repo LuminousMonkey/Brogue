@@ -1,5 +1,90 @@
 #include "color.h"
 
+#include "Rogue.h"
+
+void applyColorMultiplier(color *baseColor, const color *multiplierColor) {
+  baseColor->red = baseColor->red * multiplierColor->red / 100;
+  baseColor->redRand = baseColor->redRand * multiplierColor->redRand / 100;
+  baseColor->green = baseColor->green * multiplierColor->green / 100;
+  baseColor->greenRand = baseColor->greenRand *
+      multiplierColor->greenRand / 100;
+  baseColor->blue = baseColor->blue * multiplierColor->blue / 100;
+  baseColor->blueRand = baseColor->blueRand *
+      multiplierColor->blueRand / 100;
+  baseColor->rand = baseColor->rand * multiplierColor->rand / 100;
+}
+
+void applyColorAverage(color *baseColor,
+                       const color *newColor,
+                       short averageWeight) {
+  short weightComplement = 100 - averageWeight;
+  baseColor->red = (baseColor->red * weightComplement + newColor->red *
+                    averageWeight) / 100;
+  baseColor->redRand = (baseColor->redRand * weightComplement +
+                        newColor->redRand * averageWeight) / 100;
+  baseColor->green = (baseColor->green * weightComplement +
+                      newColor->green * averageWeight) / 100;
+  baseColor->greenRand = (baseColor->greenRand * weightComplement +
+                          newColor->greenRand * averageWeight) / 100;
+  baseColor->blue = (baseColor->blue * weightComplement + newColor->blue *
+                     averageWeight) / 100;
+  baseColor->blueRand = (baseColor->blueRand * weightComplement +
+                         newColor->blueRand * averageWeight) / 100;
+  baseColor->rand = (baseColor->rand * weightComplement + newColor->rand *
+                     averageWeight) / 100;
+  baseColor->colorDances = (baseColor->colorDances || newColor->colorDances);
+}
+
+void applyColorAugment(color *baseColor,
+                       const color *augmentingColor,
+                       short augmentWeight) {
+  baseColor->red += (augmentingColor->red * augmentWeight) / 100;
+  baseColor->redRand += (augmentingColor->redRand * augmentWeight) / 100;
+  baseColor->green += (augmentingColor->green * augmentWeight) / 100;
+  baseColor->greenRand += (augmentingColor->greenRand * augmentWeight) / 100;
+  baseColor->blue += (augmentingColor->blue * augmentWeight) / 100;
+  baseColor->blueRand += (augmentingColor->blueRand * augmentWeight) / 100;
+  baseColor->rand += (augmentingColor->rand * augmentWeight) / 100;
+}
+
+void applyColorScalar(color *baseColor, short scalar) {
+  baseColor->red          = baseColor->red        * scalar / 100;
+  baseColor->redRand      = baseColor->redRand    * scalar / 100;
+  baseColor->green        = baseColor->green      * scalar / 100;
+  baseColor->greenRand    = baseColor->greenRand  * scalar / 100;
+  baseColor->blue         = baseColor->blue       * scalar / 100;
+  baseColor->blueRand     = baseColor->blueRand   * scalar / 100;
+  baseColor->rand         = baseColor->rand       * scalar / 100;
+}
+
+void applyColorBounds(color *baseColor, short lowerBound, short upperBound) {
+  baseColor->red          = clamp(baseColor->red, lowerBound, upperBound);
+  baseColor->redRand      = clamp(baseColor->redRand, lowerBound, upperBound);
+  baseColor->green        = clamp(baseColor->green, lowerBound, upperBound);
+  baseColor->greenRand    = clamp(baseColor->greenRand, lowerBound, upperBound);
+  baseColor->blue         = clamp(baseColor->blue, lowerBound, upperBound);
+  baseColor->blueRand     = clamp(baseColor->blueRand, lowerBound, upperBound);
+  baseColor->rand         = clamp(baseColor->rand, lowerBound, upperBound);
+}
+
+void desaturate(color *baseColor, short weight) {
+  short avg;
+  avg = (baseColor->red + baseColor->green + baseColor->blue) / 3 + 1;
+  baseColor->red = baseColor->red * (100 - weight) / 100 +
+      (avg * weight / 100);
+  baseColor->green = baseColor->green * (100 - weight) / 100 +
+      (avg * weight / 100);
+  baseColor->blue = baseColor->blue * (100 - weight) / 100 +
+      (avg * weight / 100);
+
+  avg = (baseColor->redRand + baseColor->greenRand + baseColor->blueRand);
+  baseColor->redRand = baseColor->redRand * (100 - weight) / 100;
+  baseColor->greenRand = baseColor->greenRand * (100 - weight) / 100;
+  baseColor->blueRand = baseColor->blueRand * (100 - weight) / 100;
+
+  baseColor->rand += avg * weight / 3 / 100;
+}
+
 // basic colors
 const struct color white =                 {100,   100,    100,    0,      0,          0,          0,      false};
 const struct color gray =                  {50,    50,     50,     0,      0,          0,          0,      false};
