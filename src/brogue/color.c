@@ -48,23 +48,23 @@ void applyColorAugment(color *baseColor,
 }
 
 void applyColorScalar(color *baseColor, short scalar) {
-  baseColor->red          = baseColor->red        * scalar / 100;
-  baseColor->redRand      = baseColor->redRand    * scalar / 100;
-  baseColor->green        = baseColor->green      * scalar / 100;
-  baseColor->greenRand    = baseColor->greenRand  * scalar / 100;
-  baseColor->blue         = baseColor->blue       * scalar / 100;
-  baseColor->blueRand     = baseColor->blueRand   * scalar / 100;
-  baseColor->rand         = baseColor->rand       * scalar / 100;
+  baseColor->red = baseColor->red * scalar / 100;
+  baseColor->redRand = baseColor->redRand * scalar / 100;
+  baseColor->green = baseColor->green * scalar / 100;
+  baseColor->greenRand = baseColor->greenRand * scalar / 100;
+  baseColor->blue = baseColor->blue * scalar / 100;
+  baseColor->blueRand = baseColor->blueRand * scalar / 100;
+  baseColor->rand = baseColor->rand * scalar / 100;
 }
 
 void applyColorBounds(color *baseColor, short lowerBound, short upperBound) {
-  baseColor->red          = clamp(baseColor->red, lowerBound, upperBound);
-  baseColor->redRand      = clamp(baseColor->redRand, lowerBound, upperBound);
-  baseColor->green        = clamp(baseColor->green, lowerBound, upperBound);
-  baseColor->greenRand    = clamp(baseColor->greenRand, lowerBound, upperBound);
-  baseColor->blue         = clamp(baseColor->blue, lowerBound, upperBound);
-  baseColor->blueRand     = clamp(baseColor->blueRand, lowerBound, upperBound);
-  baseColor->rand         = clamp(baseColor->rand, lowerBound, upperBound);
+  baseColor->red = clamp(baseColor->red, lowerBound, upperBound);
+  baseColor->redRand = clamp(baseColor->redRand, lowerBound, upperBound);
+  baseColor->green = clamp(baseColor->green, lowerBound, upperBound);
+  baseColor->greenRand = clamp(baseColor->greenRand, lowerBound, upperBound);
+  baseColor->blue = clamp(baseColor->blue, lowerBound, upperBound);
+  baseColor->blueRand = clamp(baseColor->blueRand, lowerBound, upperBound);
+  baseColor->rand = clamp(baseColor->rand, lowerBound, upperBound);
 }
 
 void desaturate(color *baseColor, short weight) {
@@ -83,6 +83,17 @@ void desaturate(color *baseColor, short weight) {
   baseColor->blueRand = baseColor->blueRand * (100 - weight) / 100;
 
   baseColor->rand += avg * weight / 3 / 100;
+}
+
+static short randomizeByPercent(const short input, const short percent) {
+  return (rand_range(input * (100 - percent) / 100,
+                     input * (100 + percent) / 100));
+}
+
+void randomizeColor(color *baseColor, short randomizePercent) {
+  baseColor->red = randomizeByPercent(baseColor->red, randomizePercent);
+  baseColor->green = randomizeByPercent(baseColor->green, randomizePercent);
+  baseColor->blue = randomizeByPercent(baseColor->blue, randomizePercent);
 }
 
 // basic colors

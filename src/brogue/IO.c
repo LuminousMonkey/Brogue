@@ -1281,16 +1281,6 @@ void refreshDungeonCell(short x, short y) {
 	plotCharWithColor(cellChar, mapToWindowX(x), mapToWindowY(y), &foreColor, &backColor);
 }
 
-short randomizeByPercent(short input, short percent) {
-	return (rand_range(input * (100 - percent) / 100, input * (100 + percent) / 100));
-}
-
-void randomizeColor(color *baseColor, short randomizePercent) {
-	baseColor->red = randomizeByPercent(baseColor->red, randomizePercent);
-	baseColor->green = randomizeByPercent(baseColor->green, randomizePercent);
-	baseColor->blue = randomizeByPercent(baseColor->blue, randomizePercent);
-}
-
 // Assumes colors are pre-baked.
 void blendAppearances(const color *fromForeColor, const color *fromBackColor, const uchar fromChar,
                       const color *toForeColor, const color *toBackColor, const uchar toChar,

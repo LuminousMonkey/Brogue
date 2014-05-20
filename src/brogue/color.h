@@ -55,6 +55,7 @@ void applyColorAugment(color *baseColor,
 void applyColorScalar(color *baseColor, short scalar);
 void applyColorBounds(color *baseColor, short lowerBound, short upperBound);
 void desaturate(color *baseColor, short weight);
+void randomizeColor(color *baseColor, short randomizePercent);
 
 // basic colors
 extern const struct color white;
