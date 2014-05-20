@@ -96,6 +96,83 @@ void randomizeColor(color *baseColor, short randomizePercent) {
   baseColor->blue = randomizeByPercent(baseColor->blue, randomizePercent);
 }
 
+// Assumes colors are pre-baked.
+void blendAppearances(const color *fromForeColor,
+                      const color *fromBackColor,
+                      const uchar fromChar,
+                      const color *toForeColor,
+                      const color *toBackColor,
+                      const uchar toChar,
+                      color *const retForeColor,
+                      color *const retBackColor,
+                      uchar *const retChar,
+                      const short percent) {
+  // Straight average of the back color:
+  *retBackColor = *fromBackColor;
+  applyColorAverage(retBackColor, toBackColor, percent);
+
+  // Pick the character:
+  if (percent >= 50) {
+    *retChar = toChar;
+  } else {
+    *retChar = fromChar;
+  }
+
+  // Pick the method for blending the fore color.
+  if (fromChar == toChar) {
+    // If the character isn't changing, do a straight average.
+    *retForeColor = *fromForeColor;
+    applyColorAverage(retForeColor, toForeColor, percent);
+  } else {
+    // If it is changing, the first half blends to the current back
+    // color, and the second half blends to the final back color.
+    if (percent >= 50) {
+      *retForeColor = *retBackColor;
+      applyColorAverage(retForeColor, toForeColor, (percent - 50) * 2);
+    } else {
+      *retForeColor = *fromForeColor;
+      applyColorAverage(retForeColor, retBackColor, percent * 2);
+    }
+  }
+}
+
+// if forecolor is too similar to back, darken or lighten it and return true.
+// Assumes colors have already been baked (no random components).
+boolean separateColors(color *const fore, color *const back) {
+  color f, b, *modifier;
+  short failsafe;
+  boolean madeChange;
+
+  f = *fore;
+  b = *back;
+  f.red = max(0, min(100, f.red));
+  f.green = max(0, min(100, f.green));
+  f.blue = max(0, min(100, f.blue));
+  b.red = max(0, min(100, b.red));
+  b.green = max(0, min(100, b.green));
+  b.blue = max(0, min(100, b.blue));
+
+  if (f.red + f.blue + f.green > 50 * 3) {
+    modifier = (struct color *)&black;
+  } else {
+    modifier = (struct color *)&white;
+  }
+
+  madeChange = false;
+  failsafe = 10;
+
+  while(COLOR_DIFF(f, b) < MIN_COLOR_DIFF && --failsafe) {
+    applyColorAverage(&f, modifier, 20);
+    madeChange = true;
+  }
+
+  if (madeChange) {
+    *fore = f;
+  }
+
+  return madeChange;
+}
+
 // basic colors
 const struct color white =                 {100,   100,    100,    0,      0,          0,          0,      false};
 const struct color gray =                  {50,    50,     50,     0,      0,          0,          0,      false};

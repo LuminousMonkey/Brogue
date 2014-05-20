@@ -56,6 +56,17 @@ void applyColorScalar(color *baseColor, short scalar);
 void applyColorBounds(color *baseColor, short lowerBound, short upperBound);
 void desaturate(color *baseColor, short weight);
 void randomizeColor(color *baseColor, short randomizePercent);
+void blendAppearances(const color *const fromForeColor,
+                      const color *const fromBackColor,
+                      const uchar fromChar,
+                      const color *const toForeColor,
+                      const color *const toBackColor,
+                      const uchar toChar,
+                      color *const retForeColor,
+                      color *const retBackColor,
+                      uchar *const retChar,
+                      const short percent);
+boolean separateColors(color *const fore, color *const back);
 
 // basic colors
 extern const struct color white;

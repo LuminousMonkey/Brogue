@@ -856,44 +856,6 @@ void shuffleTerrainColors(short percentOfCells, boolean refreshCells) {
 	restoreRNG;
 }
 
-// if forecolor is too similar to back, darken or lighten it and return true.
-// Assumes colors have already been baked (no random components).
-boolean separateColors(color *fore, color *back) {
-	color f, b, *modifier;
-	short failsafe;
-	boolean madeChange;
-	
-	f = *fore;
-	b = *back;
-	f.red		= max(0, min(100, f.red));
-	f.green		= max(0, min(100, f.green));
-	f.blue		= max(0, min(100, f.blue));
-	b.red		= max(0, min(100, b.red));
-	b.green		= max(0, min(100, b.green));
-	b.blue		= max(0, min(100, b.blue));
-	
-	if (f.red + f.blue + f.green > 50 * 3) {
-		modifier = &black;
-	} else {
-		modifier = &white;
-	}
-	
-	madeChange = false;
-	failsafe = 10;
-	
-	while(COLOR_DIFF(f, b) < MIN_COLOR_DIFF && --failsafe) {
-		applyColorAverage(&f, modifier, 20);
-		madeChange = true;
-	}
-	
-	if (madeChange) {
-		*fore = f;
-		return true;
-	} else {
-		return false;
-	}
-}
-
 // okay, this is kind of a beast...
 void getCellAppearance(short x, short y, uchar *returnChar, color *returnForeColor, color *returnBackColor) {
 	short bestBCPriority, bestFCPriority, bestCharPriority;
@@ -1279,39 +1241,6 @@ void refreshDungeonCell(short x, short y) {
 	color foreColor, backColor;
 	getCellAppearance(x, y, &cellChar, &foreColor, &backColor);
 	plotCharWithColor(cellChar, mapToWindowX(x), mapToWindowY(y), &foreColor, &backColor);
-}
-
-// Assumes colors are pre-baked.
-void blendAppearances(const color *fromForeColor, const color *fromBackColor, const uchar fromChar,
-                      const color *toForeColor, const color *toBackColor, const uchar toChar,
-                      color *retForeColor, color *retBackColor, uchar *retChar,
-                      const short percent) {
-    // Straight average of the back color:
-    *retBackColor = *fromBackColor;
-    applyColorAverage(retBackColor, toBackColor, percent);
-    
-    // Pick the character:
-    if (percent >= 50) {
-        *retChar = toChar;
-    } else {
-        *retChar = fromChar;
-    }
-    
-    // Pick the method for blending the fore color.
-    if (fromChar == toChar) {
-        // If the character isn't changing, do a straight average.
-        *retForeColor = *fromForeColor;
-        applyColorAverage(retForeColor, toForeColor, percent);
-    } else {
-        // If it is changing, the first half blends to the current back color, and the second half blends to the final back color.
-        if (percent >= 50) {
-            *retForeColor = *retBackColor;
-            applyColorAverage(retForeColor, toForeColor, (percent - 50) * 2);
-        } else {
-            *retForeColor = *fromForeColor;
-            applyColorAverage(retForeColor, retBackColor, percent * 2);
-        }
-    }
 }
 
 void irisFadeBetweenBuffers(cellDisplayBuffer fromBuf[COLS][ROWS],
