@@ -1057,7 +1057,7 @@ void call(item *theItem) {
 // If baseColor is provided, then the suffix will be in gray, flavor portions of the item name (e.g. a "pink" potion,
 //	a "sandalwood" staff, a "ruby" ring) will be in dark purple, and the Amulet of Yendor and lumenstones will be in yellow.
 //  BaseColor itself will be the color that the name reverts to outside of these colored portions.
-void itemName(item *theItem, char *root, boolean includeDetails, boolean includeArticle, color *baseColor) {
+void itemName(item *theItem, char *root, boolean includeDetails, boolean includeArticle, const color *baseColor) {
 	char buf[DCOLS], pluralization[10], article[10] = "",
 	grayEscapeSequence[5], purpleEscapeSequence[5], yellowEscapeSequence[5], baseEscapeSequence[5];
 	color tempColor;
@@ -3515,7 +3515,6 @@ void negationBlast(const char *emitterName, const short distance) {
 }
 
 void crystalize(short radius) {
-	extern color forceFieldColor;
 	short i, j;
 	creature *monst;
 	

@@ -561,10 +561,10 @@ void initializeRogue(unsigned long seed) {
 // call this once per level to set all the dynamic colors as a function of depth
 void updateColors() {
 	short i;
-	
+
 	for (i=0; i<NUMBER_DYNAMIC_COLORS; i++) {
-		*(dynamicColors[i][0]) = *(dynamicColors[i][1]);
-		applyColorAverage(dynamicColors[i][0], dynamicColors[i][2], min(100, max(0, rogue.depthLevel * 100 / AMULET_LEVEL)));
+		*((color *)dynamicColors[i][0]) = *(dynamicColors[i][1]);
+		applyColorAverage((color *)dynamicColors[i][0], dynamicColors[i][2], min(100, max(0, rogue.depthLevel * 100 / AMULET_LEVEL)));
 	}
 }
 

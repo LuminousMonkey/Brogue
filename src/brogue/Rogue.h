@@ -344,8 +344,6 @@ enum textEntryTypes {
     TEXT_INPUT_TYPES,
 };
 
-#define NUMBER_DYNAMIC_COLORS   6
-
 enum keyKind {
     KEY_DOOR,
     KEY_CAGE,
@@ -1682,14 +1680,14 @@ extern "C" {
     void printHighScores(boolean hiliteMostRecent);
     void displayGrid(short **map);
     void printSeed();
-    void printProgressBar(short x, short y, const char barLabel[COLS], long amtFilled, long amtMax, color *fillColor, boolean dim);
+    void printProgressBar(short x, short y, const char barLabel[COLS], long amtFilled, long amtMax, const color *fillColor, boolean dim);
     short printMonsterInfo(creature *monst, short y, boolean dim, boolean highlight);
     short printItemInfo(item *theItem, short y, boolean dim, boolean highlight);
     short printTerrainInfo(short x, short y, short py, const char *description, boolean dim, boolean highlight);
     void rectangularShading(short x, short y, short width, short height,
                             const color *backColor, short opacity, cellDisplayBuffer dbuf[COLS][ROWS]);
     short printTextBox(char *textBuf, short x, short y, short width,
-                       color *foreColor, color *backColor,
+                       const color *foreColor, const color *backColor,
                        cellDisplayBuffer rbuf[COLS][ROWS],
                        brogueButton *buttons, short buttonCount);
     void printMonsterDetails(creature *monst, cellDisplayBuffer rbuf[COLS][ROWS]);
@@ -1700,7 +1698,7 @@ extern "C" {
                                           cellDisplayBuffer rbuf[COLS][ROWS]);
     void funkyFade(cellDisplayBuffer displayBuf[COLS][ROWS], const color *colorStart, const color *colorEnd, short stepCount, short x, short y, boolean invert);
     void displayCenteredAlert(char *message);
-    void flashMessage(char *message, short x, short y, int time, color *fColor, color *bColor);
+    void flashMessage(char *message, short x, short y, int time, const color *fColor, const color *bColor);
     void flashTemporaryAlert(char *message, int time);
     void waitForAcknowledgment();
     void waitForKeystrokeOrMouseClick();
@@ -1718,14 +1716,14 @@ extern "C" {
                                 short x, short y,
                                 short frameCount,
                                 boolean outsideIn);
-    void colorBlendCell(short x, short y, color *hiliteColor, short hiliteStrength);
+    void colorBlendCell(short x, short y, const color *hiliteColor, short hiliteStrength);
     void hiliteCell(short x, short y, const color *hiliteColor, short hiliteStrength, boolean distinctColors);
     void colorMultiplierFromDungeonLight(short x, short y, color *editColor);
     void plotCharWithColor(uchar inputChar, short xLoc, short yLoc, const color *cellForeColor, const color *cellBackColor);
-    void plotCharToBuffer(uchar inputChar, short x, short y, color *foreColor, color *backColor, cellDisplayBuffer dbuf[COLS][ROWS]);
+    void plotCharToBuffer(uchar inputChar, short x, short y, const color *foreColor, const color *backColor, cellDisplayBuffer dbuf[COLS][ROWS]);
     void commitDraws();
     void dumpLevelToScreen();
-    void hiliteCharGrid(char hiliteCharGrid[DCOLS][DROWS], color *hiliteColor, short hiliteStrength);
+    void hiliteCharGrid(char hiliteCharGrid[DCOLS][DROWS], const color *hiliteColor, short hiliteStrength);
     void blackOutScreen();
     void colorOverDungeon(const color *color);
     void copyDisplayBuffer(cellDisplayBuffer toBuf[COLS][ROWS], cellDisplayBuffer fromBuf[COLS][ROWS]);
@@ -1733,12 +1731,12 @@ extern "C" {
     color colorFromComponents(char rgb[3]);
     void overlayDisplayBuffer(cellDisplayBuffer overBuf[COLS][ROWS], cellDisplayBuffer previousBuf[COLS][ROWS]);
     void flashForeground(short *x, short *y, color **flashColor, short *flashStrength, short count, short frames);
-    void flash(color *theColor, short frames, short x, short y);
+    void flash(const color *theColor, short frames, short x, short y);
     void colorFlash(const color *theColor, unsigned long reqTerrainFlags, unsigned long reqTileFlags, short frames, short maxRadius, short x, short y);
-    void printString(const char *theString, short x, short y, color *foreColor, color*backColor, cellDisplayBuffer dbuf[COLS][ROWS]);
+    void printString(const char *theString, short x, short y, const color *foreColor, const color *backColor, cellDisplayBuffer dbuf[COLS][ROWS]);
     short wrapText(char *to, const char *sourceText, short width);
-    short printStringWithWrapping(char *theString, short x, short y, short width, color *foreColor,
-                                  color*backColor, cellDisplayBuffer dbuf[COLS][ROWS]);
+    short printStringWithWrapping(char *theString, short x, short y, short width, const color *foreColor,
+                                  const color *backColor, cellDisplayBuffer dbuf[COLS][ROWS]);
     boolean getInputTextString(char *inputText,
                                const char *prompt,
                                short maxLength,
@@ -1816,14 +1814,14 @@ extern "C" {
     void displayMonsterFlashes(boolean flashingEnabled);
     void displayMessageArchive();
     void temporaryMessage(char *msg1, boolean requireAcknowledgment);
-    void messageWithColor(char *msg, color *theColor, boolean requireAcknowledgment);
+    void messageWithColor(char *msg, const color *theColor, boolean requireAcknowledgment);
     void flavorMessage(char *msg);
     void message(const char *msg, boolean requireAcknowledgment);
     void displayMoreSignWithoutWaitingForAcknowledgment();
     void displayMoreSign();
-    short encodeMessageColor(char *msg, short i, const color *theColor);
-    short decodeMessageColor(const char *msg, short i, color *returnColor);
-    color *messageColorFromVictim(creature *monst);
+    short encodeMessageColor(char *msg, short i, const struct color *theColor);
+    short decodeMessageColor(const char *msg, short i, struct color *returnColor);
+    const color *messageColorFromVictim(creature *monst);
     void upperCase(char *theChar);
     void updateMessageDisplay();
     void deleteMessages();
@@ -1875,7 +1873,7 @@ extern "C" {
     void monstersTurn(creature *monst);
     void spawnPeriodicHorde();
     void clearStatus(creature *monst);
-    void monsterShoots(creature *attacker, short targetLoc[2], uchar projChar, color *projColor);
+    void monsterShoots(creature *attacker, short targetLoc[2], uchar projChar, const color *projColor);
     void shootWeb(creature *breather, short targetLoc[2], short kindOfWeb);
     void moralAttack(creature *attacker, creature *defender);
     short runicWeaponChance(item *theItem, boolean customEnchantLevel, float enchantLevel);
@@ -1951,7 +1949,7 @@ extern "C" {
     short numberOfItemsInPack();
     char nextAvailableInventoryCharacter();
     void updateFloorItems();
-    void itemName(item *theItem, char *root, boolean includeDetails, boolean includeArticle, color *baseColor);
+    void itemName(item *theItem, char *root, boolean includeDetails, boolean includeArticle, const color *baseColor);
     char displayInventory(unsigned short categoryMask,
                           unsigned long requiredFlags,
                           unsigned long forbiddenFlags,
@@ -1993,7 +1991,7 @@ extern "C" {
     void freeGrid(short **array);
     void copyGrid(short **to, short **from);
     void fillGrid(short **grid, short fillValue);
-    void hiliteGrid(short **grid, color *hiliteColor, short hiliteStrength);
+    void hiliteGrid(short **grid, const color *hiliteColor, short hiliteStrength);
     void findReplaceGrid(short **grid, short findValueMin, short findValueMax, short fillValue);
     short floodFillGrid(short **grid, short x, short y, short eligibleValueMin, short eligibleValueMax, short fillValue);
     void drawRectangleOnGrid(short **grid, short x, short y, short width, short height, short value);
@@ -2056,7 +2054,7 @@ extern "C" {
     void shuffleFlavors();
     unsigned long itemValue(item *theItem);
     short strLenWithoutEscapes(const char *str);
-    void combatMessage(char *theMsg, color *theColor);
+    void combatMessage(char *theMsg, const color *theColor);
     void displayCombatText();
     void flashMonster(creature *monst, const color *theColor, short strength);
 

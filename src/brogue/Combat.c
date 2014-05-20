@@ -122,7 +122,7 @@ boolean attackHit(creature *attacker, creature *defender) {
 	return rand_percent(hitProbability(attacker, defender));
 }
 
-void monsterShoots(creature *attacker, short targetLoc[2], uchar projChar, color *projColor) {
+void monsterShoots(creature *attacker, short targetLoc[2], uchar projChar, const color *projColor) {
 	short listOfCoordinates[MAX_BOLT_LENGTH][2], originLoc[2];
 	short i, x, y, numCells;
 	creature *monst;
@@ -1296,20 +1296,24 @@ short strLenWithoutEscapes(const char *str) {
 	return count;
 }
 
-void combatMessage(char *theMsg, color *theColor) {
-	char newMsg[COLS * 2];
-	
-	if (theColor == 0) {
-		theColor = &white;
-	}
-	
-	newMsg[0] = '\0';
-	encodeMessageColor(newMsg, 0, theColor);
-	strcat(newMsg, theMsg);
-	
-	if (strLenWithoutEscapes(combatText) + strLenWithoutEscapes(newMsg) + 3 > DCOLS) {
-		// the "3" is for the semicolon, space and period that get added to conjoined combat texts.
-		displayCombatText();
+void combatMessage(char *theMsg, const color *theColor) {
+  char newMsg[COLS * 2];
+
+  color *result;
+
+  if (theColor == NULL) {
+    result = (color *)&white;
+  } else {
+    result = (color *)theColor;
+  }
+
+  newMsg[0] = '\0';
+  encodeMessageColor(newMsg, 0, (const color *)result);
+  strcat(newMsg, theMsg);
+
+  if (strLenWithoutEscapes(combatText) + strLenWithoutEscapes(newMsg) + 3 > DCOLS) {
+    // the "3" is for the semicolon, space and period that get added to conjoined combat texts.
+    displayCombatText();
 	}
 	
 	if (combatText[0]) {

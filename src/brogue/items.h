@@ -36,8 +36,8 @@ typedef struct item {
     short strengthRequired;
     unsigned short quiverNumber;
     uchar displayChar;
-    color *foreColor;
-    color *inventoryColor;
+    const color *foreColor;
+    const color *inventoryColor;
     short quantity;
     char inventoryLetter;
     char inscription[DCOLS];
