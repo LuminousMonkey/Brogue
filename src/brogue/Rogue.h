@@ -32,7 +32,7 @@
 #include "color.h"
 #include "creature.h"
 #include "defines.h"
-#include "features.h"
+#include "rogueFeatures.h"
 #include "light.h"
 #include "map.h"
 #include "random.h"

@@ -20,7 +20,7 @@ INCLUDES = -Isrc/brogue -Isrc/platform -I/usr/include/libtcod
 CFLAGS = -MMD -Wall -pedantic -std=c99 $(INCLUDES) ${DEFINES}
 LIBS = -lm
 RELEASENAME=brogue-1.7.3
-CC ?= gcc
+CC = clang
 OUTDIRS := obj/brogue obj/platform obj/tests obj/tests/brogue
 
 ifeq (${DEBUG},1)

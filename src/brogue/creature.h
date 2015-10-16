@@ -11,7 +11,7 @@
 
 #include "color.h"
 #include "defines.h"
-#include "features.h"
+#include "rogueFeatures.h"
 #include "light.h"
 #include "random.h"
 #include "types.h"
